@@ -98,18 +98,17 @@ dependencies {//Android
     /** GSon **/
     implementation(libs.gson)
 
-    //Rooms
-    val room_version = "2.6.1"
+    /** Rooms **/
     implementation(libs.androidx.room.runtime)
     annotationProcessor(libs.androidx.room.compiler)
 
-    // Retrofit
+    /** Retrofit **/
     implementation (libs.retrofit)
     implementation (libs.converter.gson)
 
     implementation (libs.accompanist.swiperefresh)
 
-    // Test rules and transitive dependencies:
+    /** Test rules and transitive dependencies: **/
     //noinspection UseTomlInstead
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     // Needed for createComposeRule(), but not for createAndroidComposeRule<YourActivity>():
