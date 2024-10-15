@@ -49,21 +49,70 @@ android {
     }
 }
 
-dependencies {
+dependencies {//Android
+    implementation(libs.androidx.core.ktx.v1131)
+    implementation(libs.androidx.lifecycle.runtime.ktx.v286)
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.ui.graphics)
-    implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
+    /** Compose **/
+    implementation(platform(libs.androidx.compose.bom.v20240903))
+    implementation(libs.androidx.activity.compose.v192)
+    //noinspection UseTomlInstead
+    implementation("androidx.compose.ui:ui")
+    //noinspection UseTomlInstead
+    implementation("androidx.compose.ui:ui-graphics")
+    //noinspection UseTomlInstead
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    //noinspection UseTomlInstead
+    implementation("androidx.compose.material3:material3")
+    implementation(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.material)
+    //noinspection UseTomlInstead
+    implementation("androidx.compose.foundation:foundation")
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.play.services.location)
+    androidTestImplementation(platform(libs.androidx.compose.bom.v20240903))
+    //noinspection UseTomlInstead
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    //noinspection UseTomlInstead
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    /** Testing **/
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    //noinspection UseTomlInstead
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+
+
+    /** Firebase **/
+    //Firebase Auth
+    implementation(libs.firebase.auth)
+
+    //Firebase Firestore
+    implementation(libs.firebase.firestore)
+    // Firebase Storage
+    implementation(platform(libs.firebase.bom))
+    //noinspection UseTomlInstead
+    implementation("com.google.firebase:firebase-storage")
+
+    /** GSon **/
+    implementation(libs.gson)
+
+    //Rooms
+    val room_version = "2.6.1"
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
+
+    // Retrofit
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+
+    implementation (libs.accompanist.swiperefresh)
+
+    // Test rules and transitive dependencies:
+    //noinspection UseTomlInstead
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    // Needed for createComposeRule(), but not for createAndroidComposeRule<YourActivity>():
+    //noinspection UseTomlInstead
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
 }

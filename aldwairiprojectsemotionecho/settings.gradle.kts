@@ -21,4 +21,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "aldwairi-projects-emotionecho"
 include(":app")
- 
