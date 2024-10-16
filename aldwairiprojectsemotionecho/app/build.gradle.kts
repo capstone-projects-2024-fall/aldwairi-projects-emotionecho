@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -94,6 +95,7 @@ dependencies {//Android
     implementation(platform(libs.firebase.bom))
     //noinspection UseTomlInstead
     implementation("com.google.firebase:firebase-storage")
+    implementation(libs.firebase.analytics)
 
     /** GSon **/
     implementation(libs.gson)
