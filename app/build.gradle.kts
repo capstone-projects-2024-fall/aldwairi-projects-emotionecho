@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("com.google.gms.google-services")
+    id("com.chaquo.python")
 }
 
 android {
@@ -18,6 +19,12 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+        //The Python interpreter is a native component,
+        // so you must use the abiFilters setting to specify which ABIs you want the app to support
+        ndk {
+            // On Apple silicon, you can omit x86_64.
+            abiFilters += listOf("arm64-v8a", "x86_64")
         }
     }
 
@@ -48,6 +55,20 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    flavorDimensions += "pyVersion"
+    productFlavors {
+        create("py311") { dimension = "pyVersion" }
+    }
+}
+
+//used for changing Chaquopy plugin settings
+chaquopy {
+    defaultConfig { }
+    productFlavors {
+        getByName("py311") { version = "3.11" }
+    }
+    sourceSets { }
 }
 
 dependencies {//Android
