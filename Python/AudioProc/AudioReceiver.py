@@ -1,22 +1,24 @@
 import AudioStream
 import socket
+import threading
+from time import sleep
 
-class AudioReceiver:
+class AudioReceiver(threading.Thread):
     """
     Uses socket communication between kotlin application and script to retrieve real-time
     mic audio.
     """
     
-    def __init__(self):
+    def __init__(self, manager, stopEvnt: threading.Event):
         """
         Constructor for AudioReceiver
         """
+        self.manager = manager
+        self.stopEvnt = stopEvnt
         self.socketAddr = ('0.0.0.0', 8888)
-        self.isReceiving = False
-        #Might manage streams another way, pass through constructor
-        self.audioStream = AudioStream()
 
-    def startReceiving(self) -> None:
+
+    def run(self):
         """
         Start receiving and routing Audio data to the AudioStream from the microphone
         """
@@ -24,18 +26,28 @@ class AudioReceiver:
         serverSocket.bind(self.socketAddr)
         serverSocket.listen(1)
 
-        self.isReceiving = True
         while True:
             conn, addr = serverSocket.accept()
+            self.clientHandler(conn)
 
+    def clientHandler(self, conn: socket.socket):
+        """
+        Handle connection Android app connection
+        """
+        try:
             while True:
-                #Buffer size will need adjusting
-                audio_data = conn.recv(1024)
-                if audio_data:
-                    #Add to AudioStream
-                    pass
+                data = conn.recv(1024)
 
+                if not data:
+                    continue
 
-    def stopReceiving(self) -> None:
-        self.isReceiving = False
+                if self.stopEvnt.is_set():
+                    break
+                
+                #This might need updating
+                self.manager.audioStream.add()
+                #Sleep time might need to be updated
+                sleep(1)
+        finally:
+            conn.close()
 
