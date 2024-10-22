@@ -1,7 +1,9 @@
 from AudioStream import AudioStream
+from SegmentStream import SegmentStream
 from AudioProcessor import AudioProcessor
 from AudioSegment import AudioSegment
 import threading
+import math
 
 BUFFER_SIZE = 8192 # 8 KB buffer: ~185ms at 44.1kHz 16bit mono
 
@@ -14,8 +16,10 @@ class Manager:
         self.channelCount = channelCount
         self.segDurationMS = segDurationMS
 
+        #Buffer size for AudioStream is ~185ms of data and Chunk size is ~20ms
         self.audioStream = AudioStream(BUFFER_SIZE, self.calcChunkSize())
-        #self.segmentStream = SegmentStream
+        #Buffer size for SegmentStream is ~1s, 5 times buffer size, dependent on ML speed
+        self.segmentStream = SegmentStream(5 * math.ceil(BUFFER_SIZE / self.calcChunkSize()))
 
     def startAudioProc(self):
         self.audioProcessor = AudioProcessor(self, self.stopEvnt)
@@ -25,15 +29,11 @@ class Manager:
         self.stopEvnt.set()
         self.audioProcessor.join()
 
-    def addPCMData(self):
-        pass
+    def addPCMData(self, data):
+        self.audioStream.write(data)
 
     def getProcessedSegment(self) -> AudioSegment:
-        #This method will need updating
-        if self.segmentStream.isEmpty():
-            return None
-        else:
-            return self.segmentStream.get()
+        return self.segmentStream.getSegment()
         
     def calcChunkSize(self) -> int:
         samples = self.sampleRatePerSec * self.segDurationMS * .001
