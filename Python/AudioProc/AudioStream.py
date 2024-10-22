@@ -2,8 +2,17 @@ import numpy as np
 import threading
 
 class AudioStream:
+    """
+    AudioStream class is used as an efficient circular buffer
+    """
     
     def __init__(self, buffSize: int, chunkSize: int):
+        """
+        Constructor for AudioStream class
+        Args:
+            buffSize: The size of the circular biffer
+            chunkSize: The size of the chunk to be returned
+        """
         self.buffSize = buffSize
         self.chunkSize = chunkSize
         
@@ -15,6 +24,11 @@ class AudioStream:
 
 
     def write(self, data):
+        """
+        Writes to the buffer at given location
+        Arg:
+            data: data to be written
+        """
         with self.lock:
             if len(data) + self.size > self.buffSize:
                 raise ValueError("Buffer overflow")
@@ -31,6 +45,11 @@ class AudioStream:
             self.size += len(data)
 
     def read(self):
+        """
+        Reads data from the buffer at given location
+        Return:
+            Data at front of buffer.
+        """
         with self.lock:
             if self.size < self.chunkSize:
                 raise ValueError("Not enough data in buffer")
