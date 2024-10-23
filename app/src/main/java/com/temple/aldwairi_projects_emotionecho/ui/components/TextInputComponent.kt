@@ -25,14 +25,27 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 
+
+/**
+ * if creating a password field, make sure:
+ * - imageVector = Icons.Filled.Lock
+ * - keyboardType = keyboardType.Password
+ */
 @Composable
-fun TextInput(
+fun CustomTextInput(
     label: String,
     textInput: MutableState<String>,
     imageVector: ImageVector = Icons.Filled.Android,
     keyboardType: KeyboardType = KeyboardType.Text,
     testTag: String
 ){
+    if ((imageVector == Icons.Filled.Lock && keyboardType != KeyboardType.Password) ||
+        (keyboardType == KeyboardType.Password && imageVector != Icons.Filled.Lock)){
+        throw IllegalArgumentException(
+            "the ImageVector Icons.Filled.Lock must be matched with the KeyboardType.Password"
+        )
+    }
+
     var passwordVisible by remember { mutableStateOf(false) }
 
     OutlinedTextField(
@@ -65,7 +78,7 @@ fun TextInput(
 @Composable
 fun previewTextInput(){
     val textInput = remember { mutableStateOf("") }
-    TextInput(label = "Password",
+    CustomTextInput(label = "Password",
         textInput = textInput,
         testTag = "preview",
         imageVector = Icons.Filled.Lock)
