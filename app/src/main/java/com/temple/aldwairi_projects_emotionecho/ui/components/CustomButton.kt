@@ -16,14 +16,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.temple.aldwairi_projects_emotionecho.ui.theme.TempleCherryRed
+import com.temple.aldwairi_projects_emotionecho.ui.theme.TempleYellow
 
+/**
+ * Creates a custom Button Composable
+ * @param text the text you want shown on the button
+ * @param brush requires a List of at least 2 Colors, used to make the button look more pretty
+ * @param onClick callback function for Button's onclick property
+ */
 @Composable
-fun ButtonComponent(
-    value: String,
+fun CustomButton(
+    text: String = "Button",
+    brush: List<Color> = listOf(Black, TempleYellow, TempleCherryRed, TempleCherryRed,
+        TempleCherryRed, TempleYellow, Black), // I know these default colors are kinda ridiculous, will change later
     onClick: () -> Unit
 ) {
     Button(
@@ -38,19 +49,12 @@ fun ButtonComponent(
             .fillMaxWidth()
             .heightIn(48.dp)
             .background(
-                brush = Brush.horizontalGradient(listOf(
-                    Color.Black,
-                    Color(255,205,0), //Temple Yellow
-                    Color(157,34,53), //Cherry Red
-                    Color(157,34,53), //Cherry Red
-                    Color(157,34,53), //Cherry Red
-                    Color(255,205,0), //Temple Yellow
-                    Color.Black)),
+                brush = Brush.horizontalGradient(brush),
                 shape = RoundedCornerShape(25.dp)
             ),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = value,
+            Text(text = text,
                 fontSize = 18.sp,
                 fontWeight = FontWeight.Bold
             )
@@ -61,5 +65,5 @@ fun ButtonComponent(
 @Preview
 @Composable
 fun PreviewButton(){
-    ButtonComponent("This is a Button") { }
+    CustomButton("This is a Button") { }
 }
