@@ -16,6 +16,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -27,9 +28,17 @@ import androidx.compose.ui.tooling.preview.Preview
 
 
 /**
- * if creating a password field, make sure:
+ * Creates a custom TextInput
+ * @param label name of the text input type
+ * @param textInput a mutable String used to retain input through state changes
+ * @param imageVector displays a leading image in the TextInput
+ * @param keyboardType used to change depending on normal text input vs password input, etc.
+ * @param testTag String used in test classes
+ * @throws IllegalArgumentException when these conditions are not met simultaneously:
  * - imageVector = Icons.Filled.Lock
  * - keyboardType = keyboardType.Password
+ *
+ * Both of these must be true in order to create a Password TextInput
  */
 @Composable
 fun CustomTextInput(
@@ -46,7 +55,7 @@ fun CustomTextInput(
         )
     }
 
-    var passwordVisible by remember { mutableStateOf(false) }
+    var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
     OutlinedTextField(
         modifier = Modifier
