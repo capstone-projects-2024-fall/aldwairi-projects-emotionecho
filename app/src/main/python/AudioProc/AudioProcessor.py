@@ -1,42 +1,32 @@
 import numpy as np
-import matplotlib as plt
-import AudioSegment
 
+MIN_SILENCE_DURATION = .3
+SILENCE_THRESHOLD = 500
 
 class AudioProcessor:
-    """
-    Creates and prepares AudioSegment for ML algorithm.
-    """
-    
-    def cleanSeg(seg: AudioSegment) -> AudioSegment:
-        """
-        Removes segments that don't provide viable raw PCM data
-        Args:
-            seg: AudioSegment
-        Returns:
-            AudioSegment if viable, else None
-        """
-        pass
 
-    def fourierTrans(seg: AudioSegment) -> AudioSegment:
-        """
-        Performs Fast Fourier Transform (FFT) on raw PCM audio data to convert data
-        into the frequency domain
-        Args:
-            seg: AudioSegment
-        Returns:
-            AudioSegment with applied FFT
-        """
-        pass
+    def __init__(self, manager):
+        self.manager = manager
+        self.silenceCounter = 0
 
-    def store(seg: AudioSegment) -> None:
-        """
-        Stores processed segment in SegmentBuffer for use by the ML algorithm.
-        Args:
-            seg: AudioSegment
-        Returns:
-            None
-        """
-        pass
+    def processChunk(self, chunk):        
+        pcmData = np.frombuffer(chunk, dtype=np.int16)
 
-    
+        for sample in pcmData:
+            #sample below silence threshold
+            if abs(sample) < SILENCE_THRESHOLD:
+                self.silence_counter += 1
+            
+            #sample not below silence threshold
+            else:
+                self.silenceCounter = 0
+                self.manager.procDataBuff.append(sample)
+            
+                if len(self.manager.procDataBuff) >= self.manager.bufferSize:
+                    self.maanger.fileManager.saveWav(sample)
+                    self.manager.procDataBuff.clear()
+
+            if self.silenceCounter >= MIN_SILENCE_DURATION * self.maanger.sampleRate and len(self.manager.procDataBuff) != 0:
+                self.maanger.fileManager.saveWav(sample)
+                self.manager.procDataBuff.clear()
+                
