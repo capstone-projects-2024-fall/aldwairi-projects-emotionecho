@@ -1,13 +1,14 @@
 import numpy as np
 
 MIN_SILENCE_DURATION = .3
-SILENCE_THRESHOLD = 500
+SILENCE_THRESHOLD = 250
 
 class AudioProcessor:
 
     def __init__(self, manager):
         self.manager = manager
         self.silenceCounter = 0
+        self.buffer = []
 
     def processChunk(self, chunk):        
         pcmData = np.frombuffer(chunk, dtype=np.int16)
@@ -15,18 +16,22 @@ class AudioProcessor:
         for sample in pcmData:
             #sample below silence threshold
             if abs(sample) < SILENCE_THRESHOLD:
-                self.silence_counter += 1
+                #print(f'silence {sample}')
+                self.silenceCounter += 1
             
             #sample not below silence threshold
             else:
+                #print(f'speech {sample}')
                 self.silenceCounter = 0
-                self.manager.procDataBuff.append(sample)
+                self.buffer.append(sample)
             
-                if len(self.manager.procDataBuff) >= self.manager.bufferSize:
-                    self.maanger.fileManager.saveWav(sample)
-                    self.manager.procDataBuff.clear()
+                if len(self.buffer) >= self.manager.bufferSize:
+                    #self.manager.fileManager.saveWav(np.array(self.buffer, dtype=np.int16).tobytes())
+                    self.manager.fileManager.saveWav(self.buffer)
+                    self.buffer.clear()
 
-            if self.silenceCounter >= MIN_SILENCE_DURATION * self.maanger.sampleRate and len(self.manager.procDataBuff) != 0:
-                self.maanger.fileManager.saveWav(sample)
-                self.manager.procDataBuff.clear()
+            if self.silenceCounter >= MIN_SILENCE_DURATION * self.manager.sampleRate and len(self.buffer) != 0:
+                #self.manager.fileManager.saveWav(np.array(self.buffer, dtype=np.int16).tobytes())
+                self.manager.fileManager.saveWav(self.buffer)
+                self.buffer.clear()
                 

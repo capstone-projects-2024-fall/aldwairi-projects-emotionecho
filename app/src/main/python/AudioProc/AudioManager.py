@@ -10,15 +10,10 @@ class AudioManager:
         self.durationMS = durationMS
         self.bufferSize = self.durationMS * self.sampleRate
 
-        self.procDataBuff = []
-
         self.audioProc = AudioProcessor(self)
         self.fileManager = FileManager(self)
         self.fileManager.makeDir()
 
     def processChunk(self, chunk):
         self.audioProc.processChunk(chunk)
-    
 
-m = AudioManager(44100, 16, 1, 2000)
-m.processChunk(1)
