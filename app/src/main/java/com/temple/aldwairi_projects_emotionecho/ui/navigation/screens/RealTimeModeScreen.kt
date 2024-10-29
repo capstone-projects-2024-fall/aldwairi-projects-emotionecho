@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import com.chaquo.python.Python
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomButton
 
-#1
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RealTimeModeScreen(
