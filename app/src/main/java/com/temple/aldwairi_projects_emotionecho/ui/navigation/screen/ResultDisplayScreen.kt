@@ -94,13 +94,13 @@ fun LegendItem(color: Color, text: String) {
 @Composable
 fun PieChartWithLegendExample() {
     val data = listOf(
-        PieChartData(20f, Color.Blue,"Neutral"),
-        PieChartData(20f, Color.Red,"Calm"),
-        PieChartData(20f, Color.Green, "Happy"),
+        PieChartData(20f, Color.Gray,"Neutral"),
+        PieChartData(20f, Color.Cyan,"Calm"),
+        PieChartData(20f, Color.Yellow, "Happy"),
         PieChartData(10f, Color.Blue,"Sad"),
-        PieChartData(10f, Color.Blue,"Angry"),
-        PieChartData(10f, Color.Blue,"Fearful"),
-        PieChartData(10f, Color.Blue,"Disgust")
+        PieChartData(10f, Color.Red,"Angry"),
+        PieChartData(10f, Color(255, 131, 0),"Fearful"),
+        PieChartData(10f, Color.Green,"Disgust")
     )
     PieChartWithLegend(data = data)
 }
