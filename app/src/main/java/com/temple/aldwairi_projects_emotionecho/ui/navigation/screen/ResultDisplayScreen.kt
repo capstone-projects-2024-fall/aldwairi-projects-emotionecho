@@ -27,12 +27,12 @@ import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.chaquo.python.Python
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 
 data class PieChartData(val value: Float, val color: Color, val label: String)
-
 @Composable
 fun PieChartWithLegend(data: List<PieChartData>) {
     Surface(
@@ -93,14 +93,18 @@ fun LegendItem(color: Color, text: String) {
 @Preview
 @Composable
 fun PieChartWithLegendExample() {
+//    val py = Python.getInstance()
+//    val objectList = py.getModule("resultProcess").callAttr("getEmotions", listOf(1,2,3,4,5,6,6,7))
+//    val floatList = objectList.asList().map { it.toString().toFloat() }
+    val floatList = listOf(10f,20f,20f,10f,10f,10f,20f)
     val data = listOf(
-        PieChartData(20f, Color.Gray,"Neutral"),
-        PieChartData(20f, Color.Cyan,"Calm"),
-        PieChartData(20f, Color.Yellow, "Happy"),
-        PieChartData(10f, Color.Blue,"Sad"),
-        PieChartData(10f, Color.Red,"Angry"),
-        PieChartData(10f, Color(255, 131, 0),"Fearful"),
-        PieChartData(10f, Color.Green,"Disgust")
+        PieChartData(floatList[0], Color.Gray,"Neutral"),
+        PieChartData(floatList[1], Color.Cyan,"Calm"),
+        PieChartData(floatList[2], Color.Yellow, "Happy"),
+        PieChartData(floatList[3], Color.Blue,"Sad"),
+        PieChartData(floatList[4], Color.Red,"Angry"),
+        PieChartData(floatList[5], Color(255, 131, 0),"Fearful"),
+        PieChartData(floatList[6], Color.Green,"Disgust")
     )
     PieChartWithLegend(data = data)
 }
