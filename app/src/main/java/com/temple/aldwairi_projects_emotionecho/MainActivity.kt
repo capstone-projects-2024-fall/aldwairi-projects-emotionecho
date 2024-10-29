@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import com.chaquo.python.Python
 import com.chaquo.python.android.AndroidPlatform
-import com.temple.aldwairi_projects_emotionecho.ui.navigation.screens.PracticeModeScreen
+import com.temple.aldwairi_projects_emotionecho.ui.screens.PracticeModeScreen
 import com.temple.aldwairi_projects_emotionecho.ui.theme.AldwairiprojectsemotionechoTheme
 
 class MainActivity : ComponentActivity() {
