@@ -1,5 +1,6 @@
 from AudioProcessor import AudioProcessor
 from FileManager import FileManager
+from time import sleep
 
 class AudioManager:
 
@@ -16,4 +17,7 @@ class AudioManager:
 
     def processChunk(self, chunk):
         self.audioProc.processChunk(chunk)
+
+    def getWavFile(self):
+        return self.fileManager.getWav()
 
