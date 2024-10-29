@@ -16,11 +16,11 @@ def recordAudio(duration, sampleRate = 44100):
 def processRecording(data):
     m = AudioManager(44100,16,1,2)
     m.fileManager.clearDir()
-    m.fileManager.saveWav(data)
+    #m.fileManager.saveWav(data)
 
     for i in range(0, len(data), 512):
         chunk = data[i:i+512]
-        print(f"processing chunk: {int(i / 512 + 1)} of {int(len(data)/512 + 1)}")
+        #print(f"processing chunk: {int(i / 512 + 1)} of {int(len(data)/512 + 1)}")
         m.processChunk(chunk)
 
 def playWav(filename):
