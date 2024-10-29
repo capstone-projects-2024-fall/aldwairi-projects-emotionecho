@@ -1,4 +1,4 @@
-package com.temple.aldwairi_projects_emotionecho.ui.navigation.screens
+package com.temple.aldwairi_projects_emotionecho.ui.screens
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
