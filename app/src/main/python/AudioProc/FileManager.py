@@ -44,7 +44,7 @@ class FileManager:
         self.countFiles -= 1
         self.filePaths.pop(0)
 
-        if os.path.isfile(filePath):
-            os.remove(filePath)
+        if os.path.isfile(path):
+            os.remove(path)
 
         return path
