@@ -23,9 +23,10 @@ sealed class App{
 }
 
 object EmotionEchoAppRouter {
-    val currentApp:MutableState<App> = mutableStateOf(App.Login)
+//    TODO: change default App to Login once fully implemented
+    val currentApp:MutableState<App> = mutableStateOf(App.Main)
 
-    // TODO(): change default screen to LoginScreen once fully implemented
+//     TODO: change default Screen to LoginScreen once fully implemented
     val currentScreen: MutableState<Screen> = mutableStateOf(Screen.PracticeModeScreen)
 
     fun navigateTo(destinationScreen: Screen){
