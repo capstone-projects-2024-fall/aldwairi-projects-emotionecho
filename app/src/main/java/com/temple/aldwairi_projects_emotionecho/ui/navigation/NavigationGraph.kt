@@ -1,6 +1,7 @@
 package com.temple.aldwairi_projects_emotionecho.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
@@ -10,6 +11,7 @@ import com.temple.aldwairi_projects_emotionecho.ui.screens.RealTimeModeScreen
 
 @Composable
 fun NavigationGraph(
+    modifier: Modifier,
     navController: NavHostController
 ){
     NavHost(
@@ -22,14 +24,17 @@ fun NavigationGraph(
 //        composable(Screen.RegisterScreen.screenRoute) {
 //            RegisterScreen()
 //        }
+//        composable(Screen.SettingsScreen.screenRoute) {
+//            SettingsScreen(modifier)
+//        }
 //        composable(Screen.HomeScreen.screenRoute) {
-//            HomeScreen()
+//            HomeScreen(modifier)
 //        }
         composable(Screen.PracticeModeScreen.screenRoute) {
-            PracticeModeScreen(LocalContext.current)
+            PracticeModeScreen(LocalContext.current, modifier)
         }
         composable(Screen.RealTimeModeScreen.screenRoute) {
-            RealTimeModeScreen(LocalContext.current)
+            RealTimeModeScreen(LocalContext.current, modifier)
         }
     }
 }

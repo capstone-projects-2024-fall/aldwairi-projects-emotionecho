@@ -31,7 +31,8 @@ import com.temple.aldwairi_projects_emotionecho.ui.components.CustomButton
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PracticeModeScreen(
-    context: Context
+    context: Context,
+    modifier: Modifier
 ){
     var isExpanded by remember { mutableStateOf(false) }
     var option by remember { mutableStateOf("") }
@@ -39,9 +40,7 @@ fun PracticeModeScreen(
     var emotions = listOf("Happy", "Sad", "Angry", "Disgusted", "Fearful")
 
     Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp)
+        modifier = modifier
     ) {
         Column(
             modifier = Modifier
@@ -91,5 +90,5 @@ fun PracticeModeScreen(
 fun PreviewPracticeModeScreen(){
     // Use LocalContext if available, or a default fallback for Preview
     val mockContext = LocalContext.current
-    PracticeModeScreen(mockContext)
+    PracticeModeScreen(mockContext, Modifier.padding(20.dp))
 }
