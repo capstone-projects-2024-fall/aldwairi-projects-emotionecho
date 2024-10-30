@@ -14,7 +14,7 @@ sealed class Screen(var title: String, var icon: ImageVector, var screenRoute: S
     object RegisterSCreen: Screen("Register", Default.Person, "register", false, {})
     object HomeScreen: Screen("Home", Default.Home, "home", true, {})
     object PracticeModeScreen: Screen("PracticeMode", Default.Psychology, "practice", true, {})
-    object RealTimeMode: Screen("RealTimeMode", Default.Hearing, "real_time", true, {})
+    object RealTimeModeScreen: Screen("RealTimeMode", Default.Hearing, "real_time", true, {})
 }
 
 sealed class App{
