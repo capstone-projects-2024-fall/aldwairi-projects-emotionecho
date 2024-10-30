@@ -98,6 +98,10 @@ dependencies {//Android
     //noinspection UseTomlInstead
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    //for navigating through screens in Compose
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.navigation.compose)
+
     /** Testing **/
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -1,4 +1,4 @@
-package com.temple.aldwairi_projects_emotionecho.ui.navigation.screens
+package com.temple.aldwairi_projects_emotionecho.ui.screens
 
 import android.content.Context
 import android.widget.Toast
@@ -26,22 +26,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.chaquo.python.Python
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomButton
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PracticeModeScreen(
-    context: Context
+fun RealTimeModeScreen(
+    context: Context,
+    modifier: Modifier
 ){
     var isExpanded by remember { mutableStateOf(false) }
     var option by remember { mutableStateOf("") }
-
-    var emotions = listOf("Happy", "Sad", "Angry", "Disgusted", "Fearful")
-
+    var python = Python.getInstance()
+    var microphoneChoice = listOf("internal","external")
+    
     Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp)
+        modifier = modifier
     ) {
         Column(
             modifier = Modifier
@@ -57,30 +58,35 @@ fun PracticeModeScreen(
                     readOnly = true,
                     value = option,
                     onValueChange = {},
-                    label = { Text("Select an element")},
+                    label = { Text("Select an microphone") },
                     modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, enabled = true)
                 )
                 ExposedDropdownMenu(
                     expanded = isExpanded,
                     onDismissRequest = { isExpanded = false }
                 ) {
-                    for (emotion in emotions){
+                    for (mic in microphoneChoice){
                         DropdownMenuItem(
-                            text = {Text(emotion)},
+                            text = { Text(mic) },
                             onClick = {
-                                option = emotion
+                                option = mic
                                 isExpanded = false
                             }
                         )
                     }
                 }
             }
-            Spacer(modifier=Modifier.height(50.dp))
+            Spacer(modifier= Modifier.height(50.dp))
             CustomButton(
-                "SUBMIT RESPONSE",
+                "Start Recording and Analyzing",
                 listOf(Color.Black, Color.Gray)
+                //set the size of the button align with the drop down
             ) {
-                Toast.makeText(context, "You chose $option", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Analyzing started using $option mic", Toast.LENGTH_LONG).show()
+                //start Audio process python function
+
+                //change to display result screen
+
             }
         }
     }
@@ -88,8 +94,8 @@ fun PracticeModeScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewPracticeModeScreen(){
+fun PreviewRealTimeModeScreen(){
     // Use LocalContext if available, or a default fallback for Preview
     val mockContext = LocalContext.current
-    PracticeModeScreen(mockContext)
+    RealTimeModeScreen(mockContext, Modifier.padding(20.dp))
 }
