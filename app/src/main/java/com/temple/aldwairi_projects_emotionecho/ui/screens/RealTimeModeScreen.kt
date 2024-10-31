@@ -4,7 +4,6 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -30,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.chaquo.python.Python
 import com.google.gson.Gson
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomButton
+import com.temple.aldwairi_projects_emotionecho.ui.components.PieChartWithLegend
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -53,7 +53,6 @@ fun RealTimeModeScreen(
         return floatList.value != null
     }
 
-    
     Surface(
         modifier = modifier
     ) {
@@ -63,10 +62,15 @@ fun RealTimeModeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ){
+            if(hasData.value){
+                PieChartWithLegend(floatList.value!!)
+            }
+
             ExposedDropdownMenuBox(
                 expanded = true,
                 onExpandedChange = { isExpanded = !isExpanded }
             ) {
+
                 TextField(
                     readOnly = true,
                     value = option,
@@ -74,11 +78,6 @@ fun RealTimeModeScreen(
                     label = { Text("Select an microphone") },
                     modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, enabled = true)
                 )
-                if(hasData.value){
-                    Row {
-                        PieChartWithLegend(floatList.value!!)
-                    }
-                }
 
                 ExposedDropdownMenu(
                     expanded = isExpanded,
