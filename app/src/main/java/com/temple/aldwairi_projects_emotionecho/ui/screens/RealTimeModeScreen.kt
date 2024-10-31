@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.chaquo.python.Python
 import com.google.gson.Gson
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomButton
+import com.temple.aldwairi_projects_emotionecho.ui.components.PieChartWithLegend
 
 
 @OptIn(ExperimentalMaterial3Api::class)
