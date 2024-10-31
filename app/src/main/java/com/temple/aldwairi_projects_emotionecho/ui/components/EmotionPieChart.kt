@@ -1,4 +1,4 @@
-package com.temple.aldwairi_projects_emotionecho.ui.screens
+package com.temple.aldwairi_projects_emotionecho.ui.components
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Column

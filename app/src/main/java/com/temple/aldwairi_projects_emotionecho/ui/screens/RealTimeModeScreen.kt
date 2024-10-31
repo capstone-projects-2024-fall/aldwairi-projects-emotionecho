@@ -4,7 +4,6 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -30,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.chaquo.python.Python
 import com.google.gson.Gson
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomButton
+import com.temple.aldwairi_projects_emotionecho.ui.components.PieChartWithLegend
 
 
 @OptIn(ExperimentalMaterial3Api::class)
