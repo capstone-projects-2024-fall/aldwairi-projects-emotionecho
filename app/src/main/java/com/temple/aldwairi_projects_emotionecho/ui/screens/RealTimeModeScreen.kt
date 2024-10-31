@@ -1,9 +1,10 @@
-package com.temple.aldwairi_projects_emotionecho.ui.navigation.screens
+package com.temple.aldwairi_projects_emotionecho.ui.screens
 
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -27,22 +28,35 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.chaquo.python.Python
+import com.google.gson.Gson
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomButton
+import com.temple.aldwairi_projects_emotionecho.ui.components.PieChartWithLegend
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RealTimeModeScreen(
-    context: Context
+    context: Context,
+    modifier: Modifier
 ){
     var isExpanded by remember { mutableStateOf(false) }
     var option by remember { mutableStateOf("") }
     var python = Python.getInstance()
     var microphoneChoice = listOf("internal","external")
+    val hasData = remember { mutableStateOf(false) }
+    val floatList = remember { mutableStateOf<List<Float>?>(null) }
+
+    fun initializeFloatList(floatListParam: List<Float>){
+        floatList.value = floatListParam
+        hasData.value = floatListParam.isNotEmpty()
+    }
+    fun isInitialize(): Boolean{
+        return floatList.value != null
+    }
+
     
     Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(20.dp)
+        modifier = modifier
     ) {
         Column(
             modifier = Modifier
@@ -50,6 +64,12 @@ fun RealTimeModeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ){
+            if(hasData.value){
+                Row {
+                    PieChartWithLegend(floatList.value!!)
+                }
+            }
+
             ExposedDropdownMenuBox(
                 expanded = true,
                 onExpandedChange = { isExpanded = !isExpanded }
@@ -61,6 +81,7 @@ fun RealTimeModeScreen(
                     label = { Text("Select an microphone") },
                     modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, enabled = true)
                 )
+
                 ExposedDropdownMenu(
                     expanded = isExpanded,
                     onDismissRequest = { isExpanded = false }
@@ -86,7 +107,8 @@ fun RealTimeModeScreen(
                 //start Audio process python function
 
                 //change to display result screen
-
+                val objectList = python.getModule("resultProcess").callAttr("get_emotions_percentage", Gson().toJson(arrayListOf(1,2,3,4,5,6,6,7)))
+                initializeFloatList( objectList.asList().map { it.toString().toFloat() } )
             }
         }
     }
@@ -97,5 +119,5 @@ fun RealTimeModeScreen(
 fun PreviewRealTimeModeScreen(){
     // Use LocalContext if available, or a default fallback for Preview
     val mockContext = LocalContext.current
-    RealTimeModeScreen(mockContext)
+    RealTimeModeScreen(mockContext, Modifier.padding(20.dp))
 }
