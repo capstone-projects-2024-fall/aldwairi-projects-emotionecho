@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.chaquo.python.Python
 import com.google.gson.Gson
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomButton
+import com.temple.aldwairi_projects_emotionecho.ui.components.PieChartWithLegend
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,6 +64,12 @@ fun RealTimeModeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ){
+            if(hasData.value){
+                Row {
+                    PieChartWithLegend(floatList.value!!)
+                }
+            }
+
             ExposedDropdownMenuBox(
                 expanded = true,
                 onExpandedChange = { isExpanded = !isExpanded }
@@ -74,11 +81,6 @@ fun RealTimeModeScreen(
                     label = { Text("Select an microphone") },
                     modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, enabled = true)
                 )
-                if(hasData.value){
-                    Row {
-                        PieChartWithLegend(floatList.value!!)
-                    }
-                }
 
                 ExposedDropdownMenu(
                     expanded = isExpanded,
