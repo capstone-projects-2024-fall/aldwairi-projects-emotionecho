@@ -53,7 +53,6 @@ fun RealTimeModeScreen(
         return floatList.value != null
     }
 
-    
     Surface(
         modifier = modifier
     ) {
@@ -63,10 +62,15 @@ fun RealTimeModeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ){
+            if(hasData.value){
+                PieChartWithLegend(floatList.value!!)
+            }
+
             ExposedDropdownMenuBox(
                 expanded = true,
                 onExpandedChange = { isExpanded = !isExpanded }
             ) {
+
                 TextField(
                     readOnly = true,
                     value = option,
@@ -74,11 +78,6 @@ fun RealTimeModeScreen(
                     label = { Text("Select an microphone") },
                     modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, enabled = true)
                 )
-                if(hasData.value){
-                    Row {
-                        PieChartWithLegend(floatList.value!!)
-                    }
-                }
 
                 ExposedDropdownMenu(
                     expanded = isExpanded,
