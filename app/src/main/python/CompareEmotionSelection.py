@@ -33,6 +33,6 @@ class CompareEmotionSelection:
 
 # Example where user selects "fearful" as predicted emotion
 if __name__ == "__main__":
-    check = CompareEmotionSelection("fearful")
+    check = CompareEmotionSelection("Fearful")
     result = check.compare_emotions()
     print(result)
