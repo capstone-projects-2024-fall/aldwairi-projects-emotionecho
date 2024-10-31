@@ -38,4 +38,6 @@ class AudioProcessor:
         if len(self.buffer) > 0 and self.silenceCounter >= MIN_SILENCE_DURATION * self.manager.sampleRate:
             self.manager.fileManager.saveWav(np.array(self.buffer, dtype=np.int16))
             self.buffer.clear()
+        
+
                 
