@@ -1,19 +1,18 @@
 package com.temple.aldwairi_projects_emotionecho.ui.screens
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,19 +38,16 @@ fun PieChartWithLegend(floatList: List<Float>) {
     val data = processFloatList(floatList)
     Surface(
         modifier = Modifier
-            .fillMaxSize()
+            .wrapContentSize()
             .padding(20.dp)
     ){
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ){
+        Row {
             PieChart(data = data)
             Spacer(modifier = Modifier.height(16.dp))
-            data.forEach { slice ->
-                LegendItem(color = slice.color, text = slice.label)
+            Column {
+                data.forEach { slice ->
+                    LegendItem(color = slice.color, text = slice.label)
+                }
             }
         }
     }
@@ -59,13 +55,12 @@ fun PieChartWithLegend(floatList: List<Float>) {
 
 @Composable
 fun PieChart(
-    data: List<PieChartData>,
-    modifier: Modifier = Modifier.size(150.dp),
+    data: List<PieChartData>
 ) {
     val totalValue = data.sumOf { it.value.toDouble() }.toFloat()
     var startAngle = 0f
 
-    Canvas(modifier = modifier.fillMaxSize()) {
+    Canvas(modifier = Modifier.size(150.dp)) {
         data.forEach { slice ->
             val sweepAngle = (slice.value / totalValue) * 360f
             drawArc(
@@ -78,15 +73,16 @@ fun PieChart(
         }
     }
 }
+
 @Composable
 fun LegendItem(color: Color, text: String) {
     Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
     ){
+        Spacer(Modifier.width(20.dp))
         Canvas(modifier = Modifier.size(16.dp)) {
             drawCircle(color = color)
         }
+        Spacer(Modifier.width(5.dp))
         Text(text = text, style = MaterialTheme.typography.bodyMedium)
     }
 }
