@@ -20,8 +20,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 data class PieChartData(val value: Float, val color: Color, val label: String)
+
+fun processFloatList(floatList: List<Float>): List<PieChartData> {
+    val data = listOf(
+        PieChartData(floatList[0], Color.Gray,"Neutral"),
+        PieChartData(floatList[1], Color.Cyan,"Calm"),
+        PieChartData(floatList[2], Color.Yellow, "Happy"),
+        PieChartData(floatList[3], Color.Blue,"Sad"),
+        PieChartData(floatList[4], Color.Red,"Angry"),
+        PieChartData(floatList[5], Color(255, 131, 0),"Fearful"),
+        PieChartData(floatList[6], Color.Green,"Disgust")
+    )
+    return  data
+}
+
 @Composable
-fun PieChartWithLegend(data: List<PieChartData>) {
+fun PieChartWithLegend(floatList: List<Float>) {
+    val data = processFloatList(floatList)
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -84,14 +99,5 @@ fun PieChartWithLegendExample() {
 //    val objectList = py.getModule("resultProcess").callAttr("getEmotions", listOf(1,2,3,4,5,6,6,7))
 //    val floatList = objectList.asList().map { it.toString().toFloat() }
     val floatList = listOf(10f,20f,20f,10f,10f,10f,20f)
-    val data = listOf(
-        PieChartData(floatList[0], Color.Gray,"Neutral"),
-        PieChartData(floatList[1], Color.Cyan,"Calm"),
-        PieChartData(floatList[2], Color.Yellow, "Happy"),
-        PieChartData(floatList[3], Color.Blue,"Sad"),
-        PieChartData(floatList[4], Color.Red,"Angry"),
-        PieChartData(floatList[5], Color(255, 131, 0),"Fearful"),
-        PieChartData(floatList[6], Color.Green,"Disgust")
-    )
-    PieChartWithLegend(data = data)
+    PieChartWithLegend(floatList)
 }
