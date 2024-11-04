@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -53,6 +54,7 @@ fun RealTimeModeScreen(
         return floatList.value != null
     }
 
+    
     Surface(
         modifier = modifier
     ) {
@@ -63,14 +65,15 @@ fun RealTimeModeScreen(
             verticalArrangement = Arrangement.Center
         ){
             if(hasData.value){
-                PieChartWithLegend(floatList.value!!)
+                Row {
+                    PieChartWithLegend(floatList.value!!)
+                }
             }
 
             ExposedDropdownMenuBox(
                 expanded = true,
                 onExpandedChange = { isExpanded = !isExpanded }
             ) {
-
                 TextField(
                     readOnly = true,
                     value = option,
