@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,16 +40,14 @@ fun RealTimeModeScreen(
     context: Context,
     modifier: Modifier
 ){
-    var isExpanded by remember { mutableStateOf(false) }
-    var option by remember { mutableStateOf("") }
-    var python = Python.getInstance()
-    var microphoneChoice = listOf("internal","external")
-    val hasData = remember { mutableStateOf(false) }
-    val floatList = remember { mutableStateOf<List<Float>?>(null) }
+    var isExpanded by rememberSaveable { mutableStateOf(false) }
+    var option by rememberSaveable { mutableStateOf("") }
+    val python = Python.getInstance()
+    val microphoneChoice = listOf("internal","external")
+    val floatList = rememberSaveable { mutableStateOf<List<Float>?>(null) }
 
     fun initializeFloatList(floatListParam: List<Float>){
         floatList.value = floatListParam
-        hasData.value = floatListParam.isNotEmpty()
     }
     fun isInitialize(): Boolean{
         return floatList.value != null
@@ -64,11 +63,7 @@ fun RealTimeModeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ){
-            if(hasData.value){
-                Row {
-                    PieChartWithLegend(floatList.value!!)
-                }
-            }
+            floatList.value?.let { PieChartWithLegend(it) }
 
             ExposedDropdownMenuBox(
                 expanded = true,

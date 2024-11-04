@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,8 +35,8 @@ fun PracticeModeScreen(
     context: Context,
     modifier: Modifier
 ){
-    var isExpanded by remember { mutableStateOf(false) }
-    var option by remember { mutableStateOf("") }
+    var isExpanded by rememberSaveable { mutableStateOf(false) }
+    var option by rememberSaveable { mutableStateOf("") }
 
     var emotions = listOf("Happy", "Sad", "Angry", "Disgusted", "Fearful")
 
