@@ -16,7 +16,7 @@ class AudioManager:
         self.fileManager.makeDir()
 
     def processChunk(self, chunk):
-        self.audioProc.processChunk(chunk)
+        self.audioProc.split(chunk)
 
     def getWavFile(self):
         return self.fileManager.getWav()

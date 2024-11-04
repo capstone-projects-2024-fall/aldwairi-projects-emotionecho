@@ -5,7 +5,7 @@ from AudioManager import AudioManager
 from FileManager import FileManager
 from time import sleep
 
-m = AudioManager(44100,16,1,2)
+m = AudioManager(44100,16,1,3)
 
 def recordAudio(duration, sampleRate = 44100):
     print('recording')
@@ -32,11 +32,12 @@ def playWav(filename):
         sd.play(audioData, samplerate=wf.getframerate())
         sd.wait()
 
-processRecording(recordAudio(5))
+processRecording(recordAudio(10))
 sleep(2)
 
+
 #For ML implemenation, either ml block or audioproc block should be thread
-while True:
-    print(m.getWavFile())
-    sleep(2)
+# while True:
+#     print(m.getWavFile())
+#     sleep(2)
 #playWav('app/src/main/python/AudioProc/wav_files/wav1_2024-10-28_15:13:17.wav')
