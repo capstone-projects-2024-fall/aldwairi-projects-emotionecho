@@ -4,6 +4,7 @@ from datetime import datetime
 import numpy as np
 import sounddevice as sd
 from time import sleep
+import shutil
 
 class FileManager:
     
@@ -38,13 +39,20 @@ class FileManager:
     def getWav(self):
         while self.countFiles == 0:
             sleep(1)
+            print(self.filePaths)
+
+        '''
+        if not self.filePaths:   #for testing if you want thread to stop when no file paths are present
+            return None:
+        '''
 
         path = self.filePaths[0]
 
         self.countFiles -= 1
         self.filePaths.pop(0)
 
+        return path
+
+    def delWav(self, path):
         if os.path.isfile(path):
             os.remove(path)
-
-        return path

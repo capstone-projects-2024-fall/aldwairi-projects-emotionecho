@@ -21,3 +21,6 @@ class AudioManager:
     def getWavFile(self):
         return self.fileManager.getWav()
 
+    def deleteWavFile(self, path):
+        self.fileManager.delWav(path)
+
