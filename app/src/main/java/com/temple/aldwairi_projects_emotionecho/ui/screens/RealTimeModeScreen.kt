@@ -116,7 +116,7 @@ fun RealTimeModeScreen(
                     AudioFormat.CHANNEL_IN_MONO,
                     AudioFormat.ENCODING_PCM_16BIT,
                     bufferSize
-                )
+                )  
                 //change to display result screen
                 val objectList = python.getModule("resultProcess").callAttr("get_emotions_percentage", Gson().toJson(arrayListOf(1,2,3,4,5,6,6,7,8)))
                 initializeFloatList( objectList.asList().map { it.toString().toFloat() } )
