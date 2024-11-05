@@ -29,7 +29,8 @@ fun processFloatList(floatList: List<Float>): List<PieChartData> {
         PieChartData(floatList[3], Color.Blue,"Sad"),
         PieChartData(floatList[4], Color.Red,"Angry"),
         PieChartData(floatList[5], Color(255, 131, 0),"Fearful"),
-        PieChartData(floatList[6], Color.Green,"Disgust")
+        PieChartData(floatList[6], Color.Green,"Disgust"),
+        PieChartData(floatList[7], Color(0xFF800080),"Surprised")
     )
     return  data
 }
@@ -95,6 +96,6 @@ fun PieChartWithLegendExample() {
 //    val py = Python.getInstance()
 //    val objectList = py.getModule("resultProcess").callAttr("getEmotions", listOf(1,2,3,4,5,6,6,7))
 //    val floatList = objectList.asList().map { it.toString().toFloat() }
-    val floatList = listOf(10f,20f,20f,10f,10f,10f,20f)
+    val floatList = listOf(10f,20f,20f,10f,10f,10f,10f,10f)
     PieChartWithLegend(floatList)
 }
