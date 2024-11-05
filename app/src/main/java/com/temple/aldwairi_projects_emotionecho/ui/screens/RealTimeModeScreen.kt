@@ -32,7 +32,10 @@ import com.chaquo.python.Python
 import com.google.gson.Gson
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomButton
 import com.temple.aldwairi_projects_emotionecho.ui.components.PieChartWithLegend
-
+import android.media.AudioFormat
+import android.media.AudioRecord
+import android.media.MediaRecorder
+import java.io.ByteArrayOutputStream
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -101,6 +104,19 @@ fun RealTimeModeScreen(
                 Toast.makeText(context, "Analyzing started using $option mic", Toast.LENGTH_LONG).show()
                 //start Audio process python function
 
+                val sampleRate = 44100
+                val bufferSize = AudioRecord.getMinBufferSize(
+                    sampleRate,
+                    AudioFormat.CHANNEL_IN_MONO,
+                    AudioFormat.ENCODING_PCM_16BIT
+                )
+                val audioRecord = AudioRecord(
+                    MediaRecorder.AudioSource.MIC,
+                    sampleRate,
+                    AudioFormat.CHANNEL_IN_MONO,
+                    AudioFormat.ENCODING_PCM_16BIT,
+                    bufferSize
+                )
                 //change to display result screen
                 val objectList = python.getModule("resultProcess").callAttr("get_emotions_percentage", Gson().toJson(arrayListOf(1,2,3,4,5,6,6,7)))
                 initializeFloatList( objectList.asList().map { it.toString().toFloat() } )
