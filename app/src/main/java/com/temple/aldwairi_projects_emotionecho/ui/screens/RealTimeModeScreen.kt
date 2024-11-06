@@ -1,6 +1,8 @@
 package com.temple.aldwairi_projects_emotionecho.ui.screens
 
+import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,37 +37,117 @@ import com.temple.aldwairi_projects_emotionecho.ui.components.PieChartWithLegend
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import java.io.ByteArrayOutputStream
+import android.Manifest
+import android.provider.MediaStore.Audio
+import android.util.Log
+import com.temple.aldwairi_projects_emotionecho.MainActivity
+
+const val REQUEST_CODE = 1
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RealTimeModeScreen(
     context: Context,
     modifier: Modifier
-){
+) {
+    // State variables
     var isExpanded by rememberSaveable { mutableStateOf(false) }
     var option by rememberSaveable { mutableStateOf("") }
+    var isRecording by rememberSaveable { mutableStateOf(false) }
     val python = Python.getInstance()
-    val microphoneChoice = listOf("internal","external")
+    val microphoneChoice = listOf("internal", "external")
     val floatList = rememberSaveable { mutableStateOf<List<Float>?>(null) }
 
-    fun initializeFloatList(floatListParam: List<Float>){
+    // Audio recording variables (global within the composable)
+    var audioRecord: AudioRecord? = remember { mutableStateOf<AudioRecord?>(null).value }
+    var recordingThread: Thread? = remember { mutableStateOf<Thread?>(null).value }
+
+    fun initializeFloatList(floatListParam: List<Float>) {
         floatList.value = floatListParam
     }
-    fun isInitialize(): Boolean{
-        return floatList.value != null
+
+    fun stopRecording() {
+        // Stop and release the recording thread and AudioRecord
+        recordingThread?.interrupt()
+        audioRecord?.stop()
+        audioRecord?.release()
+
+        // Clear the references
+        audioRecord = null
+        recordingThread = null
+
+        // Set recording state to false
+        isRecording = false
+
+        Log.d("TESTING", "Recording stopped and resources released.")
     }
 
-    
-    Surface(
-        modifier = modifier
-    ) {
+    fun startRecording(context: Context, python: Python) {
+        // Check permission before starting
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+            val sampleRate = 44100
+            val bufferSize = AudioRecord.getMinBufferSize(
+                sampleRate,
+                AudioFormat.CHANNEL_IN_MONO,
+                AudioFormat.ENCODING_PCM_16BIT
+            )
+
+            // Initialize AudioRecord
+            audioRecord = AudioRecord(
+                MediaRecorder.AudioSource.MIC,
+                sampleRate,
+                AudioFormat.CHANNEL_IN_MONO,
+                AudioFormat.ENCODING_PCM_16BIT,
+                bufferSize
+            )
+
+            val audioBuffer = ShortArray(bufferSize)
+            audioRecord?.startRecording()
+
+            // Start a new thread for recording audio
+            recordingThread = Thread {
+                try {
+                    while (!Thread.interrupted()) {
+                        val readBytes = audioRecord?.read(audioBuffer, 0, bufferSize) ?: 0
+                        if (readBytes > 0) {
+                            Log.d("TESTING", "Recording: $readBytes bytes")
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+            recordingThread?.start()
+
+            // Set recording state to true
+            isRecording = true
+        } else {
+            // If permission is not granted, request permission
+            if (context is MainActivity) {
+                context.requestAudioPermission()
+            }
+        }
+    }
+
+    fun toggleRecording() {
+        if (isRecording) {
+            stopRecording()
+        } else {
+            startRecording(context, python)
+        }
+    }
+
+
+
+    Surface(modifier = modifier) {
         Column(
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
-        ){
+        ) {
             floatList.value?.let { PieChartWithLegend(it) }
 
             ExposedDropdownMenuBox(
@@ -76,7 +158,7 @@ fun RealTimeModeScreen(
                     readOnly = true,
                     value = option,
                     onValueChange = {},
-                    label = { Text("Select an microphone") },
+                    label = { Text("Select a microphone") },
                     modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryEditable, enabled = true)
                 )
 
@@ -84,7 +166,7 @@ fun RealTimeModeScreen(
                     expanded = isExpanded,
                     onDismissRequest = { isExpanded = false }
                 ) {
-                    for (mic in microphoneChoice){
+                    for (mic in microphoneChoice) {
                         DropdownMenuItem(
                             text = { Text(mic) },
                             onClick = {
@@ -95,32 +177,14 @@ fun RealTimeModeScreen(
                     }
                 }
             }
-            Spacer(modifier= Modifier.height(50.dp))
-            CustomButton(
-                "Start Recording and Analyzing",
-                listOf(Color.Black, Color.Gray)
-                //set the size of the button align with the drop down
-            ) {
-                Toast.makeText(context, "Analyzing started using $option mic", Toast.LENGTH_LONG).show()
-                //start Audio process python function
 
-                val sampleRate = 44100
-                val bufferSize = AudioRecord.getMinBufferSize(
-                    sampleRate,
-                    AudioFormat.CHANNEL_IN_MONO,
-                    AudioFormat.ENCODING_PCM_16BIT
-                )
-                val audioRecord = AudioRecord(
-                    MediaRecorder.AudioSource.MIC,
-                    sampleRate,
-                    AudioFormat.CHANNEL_IN_MONO,
-                    AudioFormat.ENCODING_PCM_16BIT,
-                    bufferSize
-                )
-                val temp = 'tempo'
-                //change to display result screen
-                val objectList = python.getModule("resultProcess").callAttr("get_emotions_percentage", Gson().toJson(arrayListOf(1,2,3,4,5,6,6,7,8)))
-                initializeFloatList( objectList.asList().map { it.toString().toFloat() } )
+            Spacer(modifier = Modifier.height(50.dp))
+
+            CustomButton(
+                if (isRecording) "Stop Recording" else "Start Recording and Analyzing",
+                listOf(Color.Black, Color.Gray)
+            ) {
+                toggleRecording()
             }
         }
     }
@@ -128,8 +192,7 @@ fun RealTimeModeScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewRealTimeModeScreen(){
-    // Use LocalContext if available, or a default fallback for Preview
+fun PreviewRealTimeModeScreen() {
     val mockContext = LocalContext.current
     RealTimeModeScreen(mockContext, Modifier.padding(20.dp))
 }
