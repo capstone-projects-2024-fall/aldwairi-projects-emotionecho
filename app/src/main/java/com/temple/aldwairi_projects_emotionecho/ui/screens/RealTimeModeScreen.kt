@@ -65,6 +65,9 @@ fun RealTimeModeScreen(
     fun initializeFloatList(floatListParam: List<Float>) {
         floatList.value = floatListParam
     }
+    fun isInitialize(): Boolean{
+        return floatList.value != null
+    }
 
     fun stopRecording() {
         // Stop and release the recording thread and AudioRecord
@@ -184,7 +187,7 @@ fun RealTimeModeScreen(
                 Toast.makeText(context, "Analyzing started using $option mic", Toast.LENGTH_LONG).show()
 
                 //change to display result screen
-                val objectList = python.getModule("resultProcess").callAttr("get_emotions_percentage", Gson().toJson(arrayListOf(1,2,3,4,5,6,6,7,8)))
+                val objectList = python.getModule("resultProcess").callAttr("get_emotions_percentage", Gson().toJson(arrayListOf(1,2,3,4,5,6,6,7)))
                 initializeFloatList( objectList.asList().map { it.toString().toFloat() } )
 
                 toggleRecording()
