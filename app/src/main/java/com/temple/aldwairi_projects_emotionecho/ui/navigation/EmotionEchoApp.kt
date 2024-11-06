@@ -1,5 +1,6 @@
 package com.temple.aldwairi_projects_emotionecho.ui.navigation
 
+import android.content.Context
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -11,7 +12,7 @@ import com.temple.aldwairi_projects_emotionecho.ui.components.CustomNavBar
 import com.temple.aldwairi_projects_emotionecho.ui.theme.AldwairiprojectsemotionechoTheme
 
 @Composable
-fun EmotionEchoApp(){
+fun EmotionEchoApp(context: Context){
     AldwairiprojectsemotionechoTheme{
         Surface(
             modifier = Modifier.fillMaxSize()
@@ -22,7 +23,8 @@ fun EmotionEchoApp(){
             ) { innerPadding ->
                 NavigationGraph(
                     modifier = Modifier.padding(innerPadding),
-                    navController = navController
+                    navController = navController,
+                    context = context
                 )
             }
         }
