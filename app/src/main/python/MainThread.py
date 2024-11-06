@@ -27,7 +27,7 @@ duration_ms = 3  # 3 or 3000 idk
 audio_manager = AudioManager(sampleRate=sample_rate, bitDepth=bit_depth, channelCnt=channel_count, durationMS=duration_ms)
 
 #load the model
-model_path = '/Users/charlesmorgan/Desktop/EmotionEcho/EmotionEchoCNNModel.h5'
+model_path = 'app/src/main/python/ML/EmotionEchoCNNModel.h5'
 model_loader = ModelLoader(model_path)
 model = model_loader.load_model()
 
