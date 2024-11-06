@@ -182,7 +182,6 @@ fun RealTimeModeScreen(
                 listOf(Color.Black, Color.Gray)
             ) {
                 Toast.makeText(context, "Analyzing started using $option mic", Toast.LENGTH_LONG).show()
-                //start Audio process python function
 
                 //change to display result screen
                 val objectList = python.getModule("resultProcess").callAttr("get_emotions_percentage", Gson().toJson(arrayListOf(1,2,3,4,5,6,6,7,8)))
