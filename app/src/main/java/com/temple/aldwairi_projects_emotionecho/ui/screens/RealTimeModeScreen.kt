@@ -1,6 +1,5 @@
 package com.temple.aldwairi_projects_emotionecho.ui.screens
 
-import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.widget.Toast
@@ -44,8 +43,6 @@ import android.Manifest
 import android.provider.MediaStore.Audio
 import android.util.Log
 import com.temple.aldwairi_projects_emotionecho.MainActivity
-
-const val REQUEST_CODE = 1
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -184,6 +181,13 @@ fun RealTimeModeScreen(
                 if (isRecording) "Stop Recording" else "Start Recording and Analyzing",
                 listOf(Color.Black, Color.Gray)
             ) {
+                Toast.makeText(context, "Analyzing started using $option mic", Toast.LENGTH_LONG).show()
+                //start Audio process python function
+
+                //change to display result screen
+                val objectList = python.getModule("resultProcess").callAttr("get_emotions_percentage", Gson().toJson(arrayListOf(1,2,3,4,5,6,6,7,8)))
+                initializeFloatList( objectList.asList().map { it.toString().toFloat() } )
+
                 toggleRecording()
             }
         }
