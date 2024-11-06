@@ -64,7 +64,11 @@ android {
 
 //used for changing Chaquopy plugin settings
 chaquopy {
-    defaultConfig { }
+    defaultConfig {
+        pip {
+            install("numpy")
+        }
+    }
     productFlavors {
         getByName("py311") { version = "3.11" }
     }

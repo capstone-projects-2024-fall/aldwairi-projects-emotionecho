@@ -88,6 +88,7 @@ fun RealTimeModeScreen(
     fun startRecording(context: Context, python: Python) {
         // Check permission before starting
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+
             val sampleRate = 44100
             val bufferSize = AudioRecord.getMinBufferSize(
                 sampleRate,
@@ -104,16 +105,23 @@ fun RealTimeModeScreen(
                 bufferSize
             )
 
-            val audioBuffer = ShortArray(bufferSize)
+            val acceptAudio = python.getModule("AudioProc/Testing")
+            var audioBuffer = ByteArray(sampleRate * 6)
             audioRecord?.startRecording()
 
             // Start a new thread for recording audio
             recordingThread = Thread {
                 try {
+                    var totalBytesRead = 0
                     while (!Thread.interrupted()) {
                         val readBytes = audioRecord?.read(audioBuffer, 0, bufferSize) ?: 0
                         if (readBytes > 0) {
-                            Log.d("TESTING", "Recording: $readBytes bytes")
+                            totalBytesRead += readBytes
+                        }
+                        if (totalBytesRead >= sampleRate * 6){
+                            acceptAudio.callAttr("accept_audio", audioBuffer)
+                            totalBytesRead = 0
+                            audioBuffer = ByteArray(sampleRate * 6)
                         }
                     }
                 } catch (e: Exception) {
