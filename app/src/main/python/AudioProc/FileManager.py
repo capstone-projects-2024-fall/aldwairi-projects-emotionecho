@@ -39,12 +39,7 @@ class FileManager:
     def getWav(self):
         while self.countFiles == 0:
             sleep(1)
-            print(self.filePaths)
-
-        '''
-        if not self.filePaths:   #for testing if you want thread to stop when no file paths are present
-            return None:
-        '''
+            return None
 
         path = self.filePaths[0]
 
@@ -52,6 +47,7 @@ class FileManager:
         self.filePaths.pop(0)
 
         return path
+
 
     def delWav(self, path):
         if os.path.isfile(path):
