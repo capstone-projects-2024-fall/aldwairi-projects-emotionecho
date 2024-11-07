@@ -13,7 +13,6 @@ class AudioProcessor:
 
     def split(self, chunk):
         pcmData = np.frombuffer(chunk, dtype=np.int16)
-
         # Add each sample in pcmData to the buffer
         for sample in pcmData:
             self.buffer.append(sample)

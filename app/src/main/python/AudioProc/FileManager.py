@@ -2,24 +2,23 @@ import os
 import wave
 from datetime import datetime
 import numpy as np
-import sounddevice as sd
 from time import sleep
 import shutil
 
 class FileManager:
-    
+
     def __init__(self, manager):
         self.manager = manager
-        self.dirName = 'app/src/main/python/AudioProc/wav_files'
+        self.dirName = "/data/data/com.temple.aldwairi_projects_emotionecho/files/wav_files"
         self.countFiles = 0
         self.filePaths = []
-    
+
     def makeDir(self):
         os.makedirs(self.dirName, exist_ok=True)
 
     def saveWav(self, data):
         self.countFiles += 1
-        
+
         timestamp = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
         filename = self.dirName + f"/wav{self.countFiles}_{timestamp}.wav"
         self.filePaths.append(filename)

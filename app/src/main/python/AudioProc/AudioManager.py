@@ -1,5 +1,5 @@
-from AudioProcessor import AudioProcessor
-from FileManager import FileManager
+from AudioProc.AudioProcessor import AudioProcessor
+from AudioProc.FileManager import FileManager
 from time import sleep
 
 class AudioManager:
@@ -20,7 +20,4 @@ class AudioManager:
 
     def getWavFile(self):
         return self.fileManager.getWav()
-
-    def deleteWavFile(self, path):
-        self.fileManager.delWav(path)
 
