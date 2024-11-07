@@ -40,13 +40,13 @@ def test():
         mic_id = int(input("Enter the ID of the microphone you want to use: "))
         mic_router.set_device(mic_id)
     except ValueError:
-        print("Please enter a valid integer for the device ID.")
+        print("Please enter a valid device ID")
     
     # Confirm the selected microphone
     selected_device = mic_router.get_selected_device()
     if selected_device is not None:
-        print(f"Microphone with ID {selected_device} is currently selected.")
+        print(f"Microphone with ID {selected_device} is currently selected")
     else:
-        print("No microphone selected.")
+        print("No microphone selected")
 
 test()
