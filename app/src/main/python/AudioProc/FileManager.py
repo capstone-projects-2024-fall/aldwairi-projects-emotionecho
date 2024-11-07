@@ -29,6 +29,8 @@ class FileManager:
             wf.setframerate(self.manager.sampleRate)
             wf.writeframes(np.array(data, dtype=np.int16).tobytes())
 
+        return filename
+
     def clearDir(self):
         for filename in os.listdir(self.dirName):
             filePath = os.path.join(self.dirName, filename)
