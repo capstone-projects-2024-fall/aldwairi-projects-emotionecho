@@ -105,7 +105,7 @@ fun RealTimeModeScreen(
                 bufferSize
             )
 
-            val acceptAudio = python.getModule("AudioProc/Testing")
+            val acceptAudio = python.getModule("MainThread")
             var audioBuffer = ByteArray(sampleRate * 6)
             audioRecord?.startRecording()
 
@@ -119,7 +119,7 @@ fun RealTimeModeScreen(
                             totalBytesRead += readBytes
                         }
                         if (totalBytesRead >= sampleRate * 6){
-                            acceptAudio.callAttr("accept_audio", audioBuffer)
+                            acceptAudio.callAttr("audio_manager.processChunk", audioBuffer)
                             totalBytesRead = 0
                             audioBuffer = ByteArray(sampleRate * 6)
                         }
