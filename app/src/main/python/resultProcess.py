@@ -25,6 +25,7 @@ def get_emotions_percentage(list_emotion):
         "surprised": 7
     }
 
+    list_emotion = json.loads(list_emotion)
     list_emotion = [emotion_mapping[emotion] for emotion in list_emotion]
 
     emotions_percentage = [0.0] * 8

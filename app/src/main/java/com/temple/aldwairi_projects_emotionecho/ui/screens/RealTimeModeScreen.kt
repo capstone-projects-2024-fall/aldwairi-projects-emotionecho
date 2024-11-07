@@ -119,7 +119,7 @@ fun RealTimeModeScreen(
                             totalBytesRead += readBytes
                         }
                         if (totalBytesRead >= sampleRate * 6){
-                            acceptAudio.callAttr("audio_manager.processChunk", audioBuffer)
+                            acceptAudio.callAttr("run_py_script", audioBuffer)
                             totalBytesRead = 0
                             audioBuffer = ByteArray(sampleRate * 6)
                         }
@@ -195,7 +195,7 @@ fun RealTimeModeScreen(
                 Toast.makeText(context, "Analyzing started using $option mic", Toast.LENGTH_LONG).show()
 
                 //change to display result screen
-                val objectList = python.getModule("resultProcess").callAttr("get_emotions_percentage", Gson().toJson(arrayListOf(1,2,3,4,5,6,6,7)))
+                val objectList = python.getModule("resultProcess").callAttr("get_emotions_percentage", Gson().toJson(arrayListOf("neutral","happy","sad","calm","angry","fearful","disgust","surprised")))
                 initializeFloatList( objectList.asList().map { it.toString().toFloat() } )
 
                 toggleRecording()
