@@ -29,3 +29,24 @@ class RouteMicrophone:
     # Returns current device in use
     def get_selected_device(self):
         return self.mic_id
+    
+    # Test 
+def test():
+    mic_router = RouteMicrophone(None)
+    mic_router.mic_options()
+    
+    # Ask the user to select a device
+    try:
+        mic_id = int(input("Enter the ID of the microphone you want to use: "))
+        mic_router.set_device(mic_id)
+    except ValueError:
+        print("Please enter a valid integer for the device ID.")
+    
+    # Confirm the selected microphone
+    selected_device = mic_router.get_selected_device()
+    if selected_device is not None:
+        print(f"Microphone with ID {selected_device} is currently selected.")
+    else:
+        print("No microphone selected.")
+
+test()
