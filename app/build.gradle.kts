@@ -67,10 +67,15 @@ chaquopy {
     defaultConfig {
         pip {
             install("numpy")
+            install("tensorflow")
+            install("librosa==0.9.2")
+            install("scipy")
+            install("soundfile")
+            install("resampy==0.3.1")
         }
     }
     productFlavors {
-        getByName("py311") { version = "3.11" }
+        getByName("py311") { version = "3.8" }
     }
     sourceSets { }
 }
@@ -78,6 +83,7 @@ chaquopy {
 dependencies {//Android
     implementation(libs.androidx.core.ktx.v1131)
     implementation(libs.androidx.lifecycle.runtime.ktx.v286)
+
 
     /** Compose **/
     implementation(platform(libs.androidx.compose.bom.v20240903))

@@ -42,7 +42,12 @@ import java.io.ByteArrayOutputStream
 import android.Manifest
 import android.provider.MediaStore.Audio
 import android.util.Log
+import com.chaquo.python.PyObject
 import com.temple.aldwairi_projects_emotionecho.MainActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -85,6 +90,8 @@ fun RealTimeModeScreen(
         Log.d("TESTING", "Recording stopped and resources released.")
     }
 
+    val coroutineScope = CoroutineScope(Dispatchers.IO)
+
     fun startRecording(context: Context, python: Python) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
 
@@ -120,22 +127,25 @@ fun RealTimeModeScreen(
             }
             val acceptAudio = python.getModule("MainThread")
             val audioDataList = mutableListOf<Byte>()
+
             recordingThread = Thread {
                 try {
                     val buffer = ByteArray(bufferSize)
                     while (!Thread.interrupted()) {
                         val readBytes = audioRecord?.read(buffer, 0, bufferSize) ?: 0
                         if (readBytes > 0) {
-
                             // Add the recorded data to the list
                             audioDataList.addAll(buffer.take(readBytes))
                         }
 
-                        // Save to file after 6 seconds of audio
+                        // Save to file and run ML inference after 3 seconds of audio
                         if (audioDataList.size >= sampleRate * 3 * 2) { // 2 bytes per sample
                             val audioData = audioDataList.toByteArray()
 
-                            acceptAudio.callAttr("run_py_script", audioData)
+                            // Offload ML processing to a background coroutine
+                            coroutineScope.launch {
+                                runMLInference(acceptAudio, audioData)
+                            }
 
                             // Clear the list for the next chunk
                             audioDataList.clear()
@@ -223,4 +233,16 @@ fun RealTimeModeScreen(
 fun PreviewRealTimeModeScreen() {
     val mockContext = LocalContext.current
     RealTimeModeScreen(mockContext, Modifier.padding(20.dp))
+}
+
+// Function to handle ML inference in the background
+private suspend fun runMLInference(acceptAudio: PyObject, audioData: ByteArray) {
+    try {
+        withContext(Dispatchers.Default) {
+            acceptAudio.callAttr("testing", audioData)
+        }
+        Log.d("ML_PROCESSING", "Inference completed")
+    } catch (e: Exception) {
+        Log.e("ML_PROCESSING", "Error during inference: ${e.message}")
+    }
 }

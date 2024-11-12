@@ -1,6 +1,5 @@
 import numpy as np
 import librosa
-import tensorflow as tf
 
 class EmotionClassifier:
     def __init__(self, model):
