@@ -86,7 +86,6 @@ fun RealTimeModeScreen(
     }
 
     fun startRecording(context: Context, python: Python) {
-        // Check permission before starting
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
 
             val sampleRate = 44100
@@ -96,7 +95,12 @@ fun RealTimeModeScreen(
                 AudioFormat.ENCODING_PCM_16BIT
             )
 
-            // Initialize AudioRecord
+            // Verify if bufferSize is valid
+            if (bufferSize == AudioRecord.ERROR || bufferSize == AudioRecord.ERROR_BAD_VALUE) {
+                Log.e("AUDIO_RECORDING", "Invalid buffer size")
+                return
+            }
+
             audioRecord = AudioRecord(
                 MediaRecorder.AudioSource.MIC,
                 sampleRate,
@@ -105,23 +109,36 @@ fun RealTimeModeScreen(
                 bufferSize
             )
 
-            val acceptAudio = python.getModule("MainThread")
-            var audioBuffer = ByteArray(sampleRate * 6)
+            // Start recording
             audioRecord?.startRecording()
+            Log.d("AUDIO_RECORDING", "Recording started")
 
-            // Start a new thread for recording audio
+            // Check if recording actually started
+            if (audioRecord?.recordingState != AudioRecord.RECORDSTATE_RECORDING) {
+                Log.e("AUDIO_RECORDING", "Failed to start recording")
+                return
+            }
+            val acceptAudio = python.getModule("MainThread")
+            val audioDataList = mutableListOf<Byte>()
             recordingThread = Thread {
                 try {
-                    var totalBytesRead = 0
+                    val buffer = ByteArray(bufferSize)
                     while (!Thread.interrupted()) {
-                        val readBytes = audioRecord?.read(audioBuffer, 0, bufferSize) ?: 0
+                        val readBytes = audioRecord?.read(buffer, 0, bufferSize) ?: 0
                         if (readBytes > 0) {
-                            totalBytesRead += readBytes
+
+                            // Add the recorded data to the list
+                            audioDataList.addAll(buffer.take(readBytes))
                         }
-                        if (totalBytesRead >= sampleRate * 6){
-                            acceptAudio.callAttr("run_py_script", audioBuffer)
-                            totalBytesRead = 0
-                            audioBuffer = ByteArray(sampleRate * 6)
+
+                        // Save to file after 6 seconds of audio
+                        if (audioDataList.size >= sampleRate * 3 * 2) { // 2 bytes per sample
+                            val audioData = audioDataList.toByteArray()
+
+                            acceptAudio.callAttr("run_py_script", audioData)
+
+                            // Clear the list for the next chunk
+                            audioDataList.clear()
                         }
                     }
                 } catch (e: Exception) {
@@ -129,11 +146,8 @@ fun RealTimeModeScreen(
                 }
             }
             recordingThread?.start()
-
-            // Set recording state to true
             isRecording = true
         } else {
-            // If permission is not granted, request permission
             if (context is MainActivity) {
                 context.requestAudioPermission()
             }
