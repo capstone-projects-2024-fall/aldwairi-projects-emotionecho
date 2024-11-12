@@ -1,14 +1,11 @@
 import threading
 import time
-print("importing audioproc")
 from AudioProc.AudioManager import AudioManager
-print("importing model loader")
 from ML.ModelLoader import ModelLoader
-print("importing emotionclassifier")
 from ML.EmotionClassifier import EmotionClassifier
 
 #model_path = '/Users/charlesmorgan/Desktop/EmotionEcho/EmotionEchoCNNModel.h5'
-model_path = 'app/src/main/python/ML/EmotionEchoCNNModel.h5'
+model_path = 'app\src\main\python\ML\EmotionEchoCNNModel.h5'
 sample_rate = 44100
 bit_depth = 16
 channel_count = 1
@@ -55,12 +52,11 @@ emotions_list = []
 #     audio_thread.start()
 #     audio_thread.join()
 
-print('loading model')
 audio_manager = AudioManager(sampleRate=sample_rate, bitDepth=bit_depth, channelCnt=channel_count, durationMS=duration_ms)
 model_loader = ModelLoader(model_path)
 model = model_loader.load_model()
 emotion_classifier = EmotionClassifier(model)
-print('model loaded')
+
 
 def testing(audio_Data):
     path = audio_manager.processChunk(audio_Data)
@@ -75,3 +71,5 @@ def testing(audio_Data):
 
     print(emotions_list)
 
+def returnNum():
+    return 1;

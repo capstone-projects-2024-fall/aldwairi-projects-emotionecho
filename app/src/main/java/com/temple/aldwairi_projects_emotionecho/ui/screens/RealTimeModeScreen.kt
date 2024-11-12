@@ -125,7 +125,17 @@ fun RealTimeModeScreen(
                 Log.e("AUDIO_RECORDING", "Failed to start recording")
                 return
             }
-            val acceptAudio = python.getModule("MainThread")
+            lateinit var acceptAudio: PyObject
+            // Launch a coroutine for background loading
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val acceptAudio = python.getModule("MainThread")
+                    // You can store this in a globally accessible place or use it as needed
+                    Log.d("Initialization", "Loaded Python module: $acceptAudio")
+                } catch (e: Exception) {
+                    Log.e("Initialization", "Error loading Python module: ${e.message}")
+                }
+            }
             val audioDataList = mutableListOf<Byte>()
 
             recordingThread = Thread {

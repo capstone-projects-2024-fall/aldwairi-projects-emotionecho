@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("com.google.gms.google-services")
-    id("com.chaquo.python")
+    id("com.chaquo.python") version "16.0.0"
 }
 
 android {
@@ -58,7 +58,7 @@ android {
 
     flavorDimensions += "pyVersion"
     productFlavors {
-        create("py311") { dimension = "pyVersion" }
+        create("py308"){ dimension = "pyVersion" }
     }
 }
 
@@ -66,16 +66,14 @@ android {
 chaquopy {
     defaultConfig {
         pip {
-            install("numpy")
             install("tensorflow")
+            install("numpy")
             install("librosa==0.9.2")
-            install("scipy")
-            install("soundfile")
             install("resampy==0.3.1")
         }
     }
     productFlavors {
-        getByName("py311") { version = "3.8" }
+        getByName("py308") { version = "3.8" }
     }
     sourceSets { }
 }
