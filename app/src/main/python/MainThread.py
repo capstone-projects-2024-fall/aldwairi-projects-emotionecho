@@ -4,7 +4,6 @@ from AudioProc.AudioManager import AudioManager
 from ML.ModelLoader import ModelLoader
 from ML.EmotionClassifier import EmotionClassifier
 
-#model_path = '/Users/charlesmorgan/Desktop/EmotionEcho/EmotionEchoCNNModel.h5'
 model_path = 'app/src/main/assets/EmotionEchoCNNModel.h5'
 sample_rate = 44100
 bit_depth = 16
