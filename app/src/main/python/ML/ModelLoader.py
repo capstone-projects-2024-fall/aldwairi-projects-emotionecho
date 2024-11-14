@@ -8,7 +8,7 @@ class ModelLoader:
     def load_model(self):
         if not os.path.exists(self.model_path):
             raise FileNotFoundError(f"The model path {self.model_path} does not exist.")
-        
+
         try:
             model = tf.keras.models.load_model(self.model_path)
             print("Model loaded successfully.")

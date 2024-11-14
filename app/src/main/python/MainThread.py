@@ -8,7 +8,7 @@ print("importing emotionclassifier")
 from ML.EmotionClassifier import EmotionClassifier
 
 #model_path = '/Users/charlesmorgan/Desktop/EmotionEcho/EmotionEchoCNNModel.h5'
-model_path = 'app/src/main/python/ML/EmotionEchoCNNModel.h5'
+model_path = 'app/src/main/assets/EmotionEchoCNNModel.h5'
 sample_rate = 44100
 bit_depth = 16
 channel_count = 1

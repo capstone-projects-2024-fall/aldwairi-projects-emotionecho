@@ -125,7 +125,17 @@ fun RealTimeModeScreen(
                 Log.e("AUDIO_RECORDING", "Failed to start recording")
                 return
             }
-            val acceptAudio = python.getModule("MainThread")
+            lateinit var acceptAudio: PyObject
+            // Launch a coroutine for background loading
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    val acceptAudio = python.getModule("MainThread")
+                    // You can store this in a globally accessible place or use it as needed
+                    Log.d("Initialization", "Loaded Python module: $acceptAudio")
+                } catch (e: Exception) {
+                    Log.e("Initialization", "Error loading Python module: ${e.message}")
+                }
+            }
             val audioDataList = mutableListOf<Byte>()
 
             recordingThread = Thread {
@@ -142,10 +152,7 @@ fun RealTimeModeScreen(
                         if (audioDataList.size >= sampleRate * 3 * 2) { // 2 bytes per sample
                             val audioData = audioDataList.toByteArray()
 
-                            // Offload ML processing to a background coroutine
-                            coroutineScope.launch {
-                                runMLInference(acceptAudio, audioData)
-                            }
+                            acceptAudio.callAttr("testing", audioData)
 
                             // Clear the list for the next chunk
                             audioDataList.clear()
@@ -233,16 +240,4 @@ fun RealTimeModeScreen(
 fun PreviewRealTimeModeScreen() {
     val mockContext = LocalContext.current
     RealTimeModeScreen(mockContext, Modifier.padding(20.dp))
-}
-
-// Function to handle ML inference in the background
-private suspend fun runMLInference(acceptAudio: PyObject, audioData: ByteArray) {
-    try {
-        withContext(Dispatchers.Default) {
-            acceptAudio.callAttr("testing", audioData)
-        }
-        Log.d("ML_PROCESSING", "Inference completed")
-    } catch (e: Exception) {
-        Log.e("ML_PROCESSING", "Error during inference: ${e.message}")
-    }
 }
