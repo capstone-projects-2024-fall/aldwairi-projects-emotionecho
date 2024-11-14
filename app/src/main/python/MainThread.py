@@ -1,10 +1,7 @@
 import threading
 import time
-print("importing audioproc")
 from AudioProc.AudioManager import AudioManager
-print("importing model loader")
 from ML.ModelLoader import ModelLoader
-print("importing emotionclassifier")
 from ML.EmotionClassifier import EmotionClassifier
 
 #model_path = '/Users/charlesmorgan/Desktop/EmotionEcho/EmotionEchoCNNModel.h5'

@@ -1,6 +1,7 @@
 import numpy as np
 import librosa
 
+
 class EmotionClassifier:
     def __init__(self, model):
         self.model = model

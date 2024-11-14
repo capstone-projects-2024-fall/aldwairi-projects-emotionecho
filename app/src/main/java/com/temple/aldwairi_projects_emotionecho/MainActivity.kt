@@ -23,7 +23,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         // Initialize Python if not already started
         if (!Python.isStarted()) {
             Python.start(AndroidPlatform(this))
