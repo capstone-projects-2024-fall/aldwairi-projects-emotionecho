@@ -18,8 +18,11 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import com.temple.aldwairi_projects_emotionecho.ui.navigation.App
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.EmotionEchoAppRouter
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen
+import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen.LoginScreen
+import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen.SingupScreen
 
 /**
  * This method uses buildAnnotatedString to create a Text Composable with hyperlinked text
@@ -53,7 +56,14 @@ fun CustomClickableText(screen: Screen, startString:String, aString:String, aStr
                             end = position
                         ).firstOrNull{annotation ->
                             annotation.tag.startsWith(aStringTag)
-                        }?.let { EmotionEchoAppRouter.navigateTo(screen) }
+                        }?.let {
+                            if(!(screen == LoginScreen || screen == SingupScreen)){
+                                EmotionEchoAppRouter.changeApp(App.Main)
+                                EmotionEchoAppRouter.navigateTo(screen)
+                            }else{
+                                EmotionEchoAppRouter.navigateTo(screen)
+                            }
+                        }
                     }
                 }
             }

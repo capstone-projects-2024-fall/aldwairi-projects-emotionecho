@@ -25,9 +25,8 @@ import com.temple.aldwairi_projects_emotionecho.ui.components.CustomClickableTex
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomDividerWithText
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomTextInput
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen.SingupScreen
+import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen.RealTimeModeScreen
 import com.temple.aldwairi_projects_emotionecho.ui.theme.TempleCherryRed
-
-const val SIGNUP_SCREEN = "SIGNUP_SCREEN"
 
 @Composable
 fun LogInScreen(
@@ -70,6 +69,14 @@ fun LogInScreen(
                 screen = SingupScreen,
                 startString = "Don't have an account? ",
                 aString = "Signup here!",
+                aStringTag = "NAV",
+                aStringAnnotation = "takes you to our signup page"
+            )
+            CustomDividerWithText()
+            CustomClickableText(
+                screen = RealTimeModeScreen,
+                startString = "Enter as a ",
+                aString = "Guest",
                 aStringTag = "NAV",
                 aStringAnnotation = "takes you to our signup page"
             )
