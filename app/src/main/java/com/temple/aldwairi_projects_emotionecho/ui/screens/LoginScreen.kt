@@ -17,17 +17,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomButton
+import com.temple.aldwairi_projects_emotionecho.ui.components.CustomClickableText
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomDividerWithText
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomTextInput
+import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen.SingupScreen
 import com.temple.aldwairi_projects_emotionecho.ui.theme.TempleCherryRed
 
 const val SIGNUP_SCREEN = "SIGNUP_SCREEN"
@@ -69,29 +66,15 @@ fun LogInScreen(
                 Thickness.div(1.dp)
             }
             CustomDividerWithText()
-        }
-    }
-}
-
-fun getAnnotatedString(): AnnotatedString {
-    return buildAnnotatedString {
-        append("Don't have an account? ")
-        pushStringAnnotation(
-            tag = SIGNUP_SCREEN,
-            "takes you to signup screen"
-        )
-        withStyle(
-            style = SpanStyle(
-                color = Color.Blue,
-                textDecoration = TextDecoration.Underline
+            CustomClickableText(
+                screen = SingupScreen,
+                startString = "Don't have an account? ",
+                aString = "Signup here!",
+                aStringTag = "NAV",
+                aStringAnnotation = "takes you to our signup page"
             )
-        ){
-            append("Sign up here")
         }
-        pop()
-        append(" and create your account today!")
     }
-
 }
 
 @Preview(showBackground = true)

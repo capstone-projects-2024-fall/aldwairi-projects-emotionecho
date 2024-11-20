@@ -21,7 +21,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomButton
+import com.temple.aldwairi_projects_emotionecho.ui.components.CustomClickableText
+import com.temple.aldwairi_projects_emotionecho.ui.components.CustomDividerWithText
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomTextInput
+import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen.LoginScreen
 import com.temple.aldwairi_projects_emotionecho.ui.theme.TempleCherryRed
 
 @Composable
@@ -68,6 +71,14 @@ fun SignupScreen(
                 text = "Sign Up!",
                 brush = listOf(Color.Black, TempleCherryRed)
             ) { TODO() }
+            CustomDividerWithText()
+            CustomClickableText(
+                screen = LoginScreen,
+                startString = "Already have an account? ",
+                aString = "Login here!",
+                aStringTag = "NAV",
+                aStringAnnotation = "takes you to our login page"
+            )
         }
     }
 }
