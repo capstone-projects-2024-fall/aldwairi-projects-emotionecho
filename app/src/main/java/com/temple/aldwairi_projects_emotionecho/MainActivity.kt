@@ -14,6 +14,7 @@ import com.chaquo.python.android.AndroidPlatform
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.App
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.EmotionEchoApp
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.EmotionEchoAppRouter
+import com.temple.aldwairi_projects_emotionecho.ui.navigation.EmotionEchoLoginApp
 import com.temple.aldwairi_projects_emotionecho.ui.theme.AldwairiprojectsemotionechoTheme
 
 // Define your request code for clarity
@@ -41,7 +42,7 @@ class MainActivity : ComponentActivity() {
                             EmotionEchoApp(this)
                         }
 
-                        App.Login -> TODO()
+                        App.Login -> EmotionEchoLoginApp(this)
                     }
                 }
             }
