@@ -56,7 +56,8 @@ fun CustomButton(
         ) {
             Text(text = text,
                 fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                color = Color.White
             )
         }
     }
