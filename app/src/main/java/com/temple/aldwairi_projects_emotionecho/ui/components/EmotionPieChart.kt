@@ -32,7 +32,7 @@ fun processFloatList(floatList: List<Float>): List<PieChartData> {
         PieChartData(floatList[6], Color.Green,"Disgust"),
         PieChartData(floatList[7], Color(0xFF800080),"Surprised")
     )
-    return  data
+    return data
 }
 
 @Composable
@@ -48,7 +48,9 @@ fun PieChartWithLegend(floatList: List<Float>) {
             Spacer(modifier = Modifier.width(5.dp))
             Column{
                 data.forEach { slice ->
-                    LegendItem(color = slice.color, text = slice.label)
+                    if(slice.value != 0f){
+                        LegendItem(color = slice.color, text = slice.label)
+                    }
                 }
             }
         }
