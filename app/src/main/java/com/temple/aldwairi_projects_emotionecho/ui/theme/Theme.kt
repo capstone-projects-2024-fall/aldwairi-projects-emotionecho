@@ -30,14 +30,16 @@ private val DarkTempleColorScheme = darkColorScheme(
     onTertiary = TempleMetallicSilver35,
     tertiaryContainer = TempleMetallicSilver25,
     onTertiaryContainer = TempleMetallicSilver95,
-    background = TempleCherryRed10
+    surface = TempleCherryRed10,
+    outline = TempleCherryRed37,
+    outlineVariant = TempleCherryRed20
 )
 private val LightTempleColorScheme = lightColorScheme(
     primary = TempleCherryRed37,
     onPrimary = Color.White,
-    primaryContainer = TempleCherryRed90,
+    primaryContainer = TempleCherryRed80,
     onPrimaryContainer = TempleYellow10,
-    inversePrimary = TempleCherryRed80,
+    inversePrimary = TempleCherryRed70,
     secondary = TempleYellow40,
     onSecondary = Color.White,
     secondaryContainer = TempleYellow90,
@@ -46,7 +48,9 @@ private val LightTempleColorScheme = lightColorScheme(
     onTertiary = Color.White,
     tertiaryContainer = TempleMetallicSilver95,
     onTertiaryContainer = TempleMetallicSilver15,
-    background = TempleCherryRed90
+    surface = TempleCherryRed90,
+    outline = TempleCherryRed60,
+    outlineVariant = TempleCherryRed70
 )
 
 private val DarkColorScheme = darkColorScheme(
@@ -75,14 +79,14 @@ private val LightColorScheme = lightColorScheme(
 fun AldwairiprojectsemotionechoTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-//    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
-//        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-//            val context = LocalContext.current
-//            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-//        }
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+            val context = LocalContext.current
+            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        }
 
         darkTheme -> DarkTempleColorScheme
         else -> LightTempleColorScheme
