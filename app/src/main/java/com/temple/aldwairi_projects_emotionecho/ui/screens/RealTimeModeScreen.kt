@@ -135,6 +135,9 @@ fun RealTimeModeScreen(
 
                             val emotion = acceptAudio.callAttr("testing", audioData)
                             emotionArrayList.add(emotion.toString())
+                            val objList = python.getModule("resultProcess").callAttr("get_emotions_percentage",
+                                Gson().toJson(emotionArrayList))
+                            initializeFloatList(objList.asList().map { it.toString().toFloat() })
                             audioDataList.clear()
                         }
                     }
@@ -204,11 +207,7 @@ fun RealTimeModeScreen(
                 listOf(Color.Black, Color.Gray)
             ) {
                 Toast.makeText(context, "Analyzing started using $option mic", Toast.LENGTH_LONG).show()
-                val objectList = python.getModule("resultProcess").callAttr(
-                    "get_emotions_percentage",
-                    Gson().toJson(arrayListOf("neutral", "happy", "sad", "calm", "angry", "fearful", "disgust", "surprised"))
-                )
-                initializeFloatList(objectList.asList().map { it.toString().toFloat() })
+
                 toggleRecording()
             }
 
