@@ -109,7 +109,6 @@ fun RealTimeModeScreen(
                     Log.e("Initialization", "Error loading Python module: ${e.message}")
                 } finally {
                     loading = false // Hide spinner
-                    acceptAudio.callAttr("clear_dir")
                 }
             }
 
@@ -139,6 +138,8 @@ fun RealTimeModeScreen(
                             audioDataList.clear()
                         }
                     }
+                    acceptAudio.callAttr("clear_dir")
+
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
