@@ -109,6 +109,7 @@ fun RealTimeModeScreen(
                     Log.e("Initialization", "Error loading Python module: ${e.message}")
                 } finally {
                     loading = false // Hide spinner
+                    acceptAudio.callAttr("clear_dir")
                 }
             }
 
@@ -120,6 +121,7 @@ fun RealTimeModeScreen(
             }
 
             val audioDataList = mutableListOf<Byte>()
+            val emotionArrayList = ArrayList<String>()
 
             recordingThread = Thread {
                 try {
@@ -132,10 +134,8 @@ fun RealTimeModeScreen(
                         if (audioDataList.size >= sampleRate * 3 * 2) {
                             val audioData = audioDataList.toByteArray()
 
-                            val firstPartOfAudioData = audioData.take(20).joinToString(", ") { it.toString() }
-                            Log.d("AUDIO_CHECK", "First part of audio data: $firstPartOfAudioData")
-
-                            acceptAudio.callAttr("testing", audioData)
+                            val emotion = acceptAudio.callAttr("testing", audioData)
+                            emotionArrayList.add(emotion.toString())
                             audioDataList.clear()
                         }
                     }

@@ -54,7 +54,8 @@ def testing(data):
     print(f"File deleted: {wav_file_path}")
     return predicted_emotion
 
-
+def clear_dir():
+    audio_manager.fileManager.clearDir()
 
 # def process_audio_with_ml():
 #     global emotions_list
