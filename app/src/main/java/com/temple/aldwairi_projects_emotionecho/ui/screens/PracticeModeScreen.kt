@@ -18,16 +18,15 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomButton
+import com.temple.aldwairi_projects_emotionecho.ui.theme.AldwairiprojectsemotionechoTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,8 +76,7 @@ fun PracticeModeScreen(
             }
             Spacer(modifier=Modifier.height(50.dp))
             CustomButton(
-                "SUBMIT RESPONSE",
-                listOf(Color.Black, Color.Gray)
+                "SUBMIT RESPONSE"
             ) {
                 Toast.makeText(context, "You chose $option", Toast.LENGTH_LONG).show()
             }
@@ -89,7 +87,9 @@ fun PracticeModeScreen(
 @Preview(showBackground = true)
 @Composable
 fun PreviewPracticeModeScreen(){
-    // Use LocalContext if available, or a default fallback for Preview
-    val mockContext = LocalContext.current
-    PracticeModeScreen(mockContext, Modifier.padding(20.dp))
+    AldwairiprojectsemotionechoTheme(darkTheme = true) {
+        // Use LocalContext if available, or a default fallback for Preview
+        val mockContext = LocalContext.current
+        PracticeModeScreen(mockContext, Modifier.padding(20.dp))
+    }
 }

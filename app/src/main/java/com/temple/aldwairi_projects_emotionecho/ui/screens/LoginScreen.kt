@@ -15,7 +15,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,9 +23,9 @@ import com.temple.aldwairi_projects_emotionecho.ui.components.CustomButton
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomClickableText
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomDividerWithText
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomTextInput
-import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen.SingupScreen
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen.RealTimeModeScreen
-import com.temple.aldwairi_projects_emotionecho.ui.theme.TempleCherryRed
+import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen.SingupScreen
+import com.temple.aldwairi_projects_emotionecho.ui.theme.AldwairiprojectsemotionechoTheme
 
 @Composable
 fun LogInScreen(
@@ -58,7 +57,6 @@ fun LogInScreen(
             )
             CustomButton(
                 text = "Login",
-                brush = listOf(Color.Black, TempleCherryRed)
             ) { TODO() }
             DividerDefaults.apply {
                 color.blue
@@ -87,5 +85,7 @@ fun LogInScreen(
 @Preview(showBackground = true)
 @Composable
 fun PreviewLogInScreen(){
-    LogInScreen(LocalContext.current)
+    AldwairiprojectsemotionechoTheme(darkTheme = false) {
+        LogInScreen(LocalContext.current)
+    }
 }

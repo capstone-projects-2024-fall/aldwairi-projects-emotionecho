@@ -13,8 +13,8 @@ sealed class Screen(var title: String, var icon: ImageVector, var screenRoute: S
     object LoginScreen: Screen("Login", Default.Person, "login", false, {})
     object SingupScreen: Screen("Sing up", Default.Person, "sing_up", false, {})
     object HomeScreen: Screen("Home", Default.Home, "home", true, {})
-    object PracticeModeScreen: Screen("PracticeMode", Default.Psychology, "practice", true, {})
-    object RealTimeModeScreen: Screen("RealTimeMode", Default.Hearing, "real_time", true, {})
+    object PracticeModeScreen: Screen("Practice Mode", Default.Psychology, "practice", true, {})
+    object RealTimeModeScreen: Screen("Real Time Mode", Default.Hearing, "real_time", true, {})
 }
 
 sealed class App{
