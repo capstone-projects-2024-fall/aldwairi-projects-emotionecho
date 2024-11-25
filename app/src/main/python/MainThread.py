@@ -50,6 +50,10 @@ def testing(data):
     audio_features = emotion_classifier.extract_mfcc(wav_file_path)
     predicted_emotion = emotion_classifier.classify_audio(audio_features)
     print(f"Predicted Emotion: {predicted_emotion}")
+    audio_manager.fileManager.delWav(wav_file_path)
+    print(f"File deleted: {wav_file_path}")
+    return predicted_emotion
+
 
 
 # def process_audio_with_ml():
