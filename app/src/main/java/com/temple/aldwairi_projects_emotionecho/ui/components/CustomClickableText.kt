@@ -9,7 +9,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -23,6 +22,8 @@ import com.temple.aldwairi_projects_emotionecho.ui.navigation.EmotionEchoAppRout
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen.LoginScreen
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen.SingupScreen
+import com.temple.aldwairi_projects_emotionecho.ui.theme.AldwairiprojectsemotionechoTheme
+import com.temple.aldwairi_projects_emotionecho.ui.theme.LocalExtendedColors
 
 /**
  * This method uses buildAnnotatedString to create a Text Composable with hyperlinked text
@@ -70,6 +71,7 @@ fun CustomClickableText(screen: Screen, startString:String, aString:String, aStr
     )
 }
 
+@Composable
 fun getAnnotatedString(startString:String, aString:String, aStringTag: String, aStringAnnotation: String): AnnotatedString {
     return buildAnnotatedString {
         append(startString)
@@ -79,7 +81,7 @@ fun getAnnotatedString(startString:String, aString:String, aStringTag: String, a
         )
         withStyle(
             style = SpanStyle(
-                color = Color.Blue,
+                color = LocalExtendedColors.current.link,
                 textDecoration = TextDecoration.Underline
             )
         ){
@@ -93,11 +95,13 @@ fun getAnnotatedString(startString:String, aString:String, aStringTag: String, a
 @Preview(showBackground = true)
 @Composable
 fun PreviewCustomClickableText(){
-    CustomClickableText(
-        screen = Screen.SingupScreen,
-        startString = "Text with no hyperlink",
-        aString = " Hyperlink",
-        aStringTag = "tag",
-        aStringAnnotation = "does nothing"
-    )
+    AldwairiprojectsemotionechoTheme(darkTheme = true) {
+        CustomClickableText(
+            screen = SingupScreen,
+            startString = "Text with no hyperlink",
+            aString = " Hyperlink",
+            aStringTag = "tag",
+            aStringAnnotation = "does nothing"
+        )
+    }
 }
