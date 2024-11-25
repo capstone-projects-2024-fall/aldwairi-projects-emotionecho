@@ -5,10 +5,9 @@ from sklearn.model_selection import train_test_split
 from tensorflow.keras.layers import Conv1D, Activation, Dropout, Flatten, Dense
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import RMSprop
-import matplotlib.pyplot as plt
 
 
-SAVE_DIR_PATH = '/Users/charlesmorgan/Desktop/MFCC_Features'
+SAVE_DIR_PATH = '/data/data/com.temple.aldwairi_projects_emotionecho/files/chaquopy/AssetFinder/app/ML'
 
 x = joblib.load(os.path.join(SAVE_DIR_PATH, 'x.joblib'))
 y = joblib.load(os.path.join(SAVE_DIR_PATH, 'y.joblib'))

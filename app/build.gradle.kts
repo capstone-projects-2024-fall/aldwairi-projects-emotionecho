@@ -66,10 +66,9 @@ android {
 chaquopy {
     defaultConfig {
         pip {
-            install("tensorflow")
+            install("scipy")
+            install("torch")
             install("numpy")
-            install("librosa==0.9.2")
-            install("resampy==0.3.1")
         }
     }
     productFlavors {

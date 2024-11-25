@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -36,18 +35,14 @@ import com.temple.aldwairi_projects_emotionecho.ui.components.PieChartWithLegend
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import java.io.ByteArrayOutputStream
 import android.Manifest
-import android.provider.MediaStore.Audio
 import android.util.Log
 import com.chaquo.python.PyObject
 import com.temple.aldwairi_projects_emotionecho.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,6 +57,7 @@ fun RealTimeModeScreen(
     val python = Python.getInstance()
     val microphoneChoice = listOf("internal", "external")
     val floatList = rememberSaveable { mutableStateOf<List<Float>?>(null) }
+    var loading by remember { mutableStateOf(false) } // Loading state
 
     // Audio recording variables (global within the composable)
     var audioRecord: AudioRecord? = remember { mutableStateOf<AudioRecord?>(null).value }
@@ -70,39 +66,25 @@ fun RealTimeModeScreen(
     fun initializeFloatList(floatListParam: List<Float>) {
         floatList.value = floatListParam
     }
-    fun isInitialize(): Boolean{
-        return floatList.value != null
-    }
 
     fun stopRecording() {
-        // Stop and release the recording thread and AudioRecord
         recordingThread?.interrupt()
         audioRecord?.stop()
         audioRecord?.release()
-
-        // Clear the references
         audioRecord = null
         recordingThread = null
-
-        // Set recording state to false
         isRecording = false
-
         Log.d("TESTING", "Recording stopped and resources released.")
     }
 
-    val coroutineScope = CoroutineScope(Dispatchers.IO)
-
     fun startRecording(context: Context, python: Python) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-
             val sampleRate = 44100
             val bufferSize = AudioRecord.getMinBufferSize(
                 sampleRate,
                 AudioFormat.CHANNEL_IN_MONO,
                 AudioFormat.ENCODING_PCM_16BIT
             )
-
-            // Verify if bufferSize is valid
             if (bufferSize == AudioRecord.ERROR || bufferSize == AudioRecord.ERROR_BAD_VALUE) {
                 Log.e("AUDIO_RECORDING", "Invalid buffer size")
                 return
@@ -116,26 +98,27 @@ fun RealTimeModeScreen(
                 bufferSize
             )
 
-            // Start recording
             audioRecord?.startRecording()
             Log.d("AUDIO_RECORDING", "Recording started")
-
-            // Check if recording actually started
             if (audioRecord?.recordingState != AudioRecord.RECORDSTATE_RECORDING) {
                 Log.e("AUDIO_RECORDING", "Failed to start recording")
                 return
             }
+
+            // Start coroutine to load the Python module
+            loading = true // Show spinner
             lateinit var acceptAudio: PyObject
-            // Launch a coroutine for background loading
             CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    val acceptAudio = python.getModule("MainThread")
-                    // You can store this in a globally accessible place or use it as needed
+                    acceptAudio = python.getModule("MainThread")
                     Log.d("Initialization", "Loaded Python module: $acceptAudio")
                 } catch (e: Exception) {
                     Log.e("Initialization", "Error loading Python module: ${e.message}")
+                } finally {
+                    loading = false // Hide spinner
                 }
             }
+
             val audioDataList = mutableListOf<Byte>()
 
             recordingThread = Thread {
@@ -144,17 +127,11 @@ fun RealTimeModeScreen(
                     while (!Thread.interrupted()) {
                         val readBytes = audioRecord?.read(buffer, 0, bufferSize) ?: 0
                         if (readBytes > 0) {
-                            // Add the recorded data to the list
                             audioDataList.addAll(buffer.take(readBytes))
                         }
-
-                        // Save to file and run ML inference after 3 seconds of audio
-                        if (audioDataList.size >= sampleRate * 3 * 2) { // 2 bytes per sample
+                        if (audioDataList.size >= sampleRate * 3 * 2) {
                             val audioData = audioDataList.toByteArray()
-
                             acceptAudio.callAttr("testing", audioData)
-
-                            // Clear the list for the next chunk
                             audioDataList.clear()
                         }
                     }
@@ -178,8 +155,6 @@ fun RealTimeModeScreen(
             startRecording(context, python)
         }
     }
-
-
 
     Surface(modifier = modifier) {
         Column(
@@ -224,12 +199,22 @@ fun RealTimeModeScreen(
                 listOf(Color.Black, Color.Gray)
             ) {
                 Toast.makeText(context, "Analyzing started using $option mic", Toast.LENGTH_LONG).show()
-
-                //change to display result screen
-                val objectList = python.getModule("resultProcess").callAttr("get_emotions_percentage", Gson().toJson(arrayListOf("neutral","happy","sad","calm","angry","fearful","disgust","surprised")))
-                initializeFloatList( objectList.asList().map { it.toString().toFloat() } )
-
+                val objectList = python.getModule("resultProcess").callAttr(
+                    "get_emotions_percentage",
+                    Gson().toJson(arrayListOf("neutral", "happy", "sad", "calm", "angry", "fearful", "disgust", "surprised"))
+                )
+                initializeFloatList(objectList.asList().map { it.toString().toFloat() })
                 toggleRecording()
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // Show spinner while loading
+            if (loading) {
+                androidx.compose.material3.CircularProgressIndicator(
+                    modifier = Modifier.padding(16.dp),
+                    color = Color.Blue
+                )
             }
         }
     }
@@ -241,3 +226,4 @@ fun PreviewRealTimeModeScreen() {
     val mockContext = LocalContext.current
     RealTimeModeScreen(mockContext, Modifier.padding(20.dp))
 }
+
