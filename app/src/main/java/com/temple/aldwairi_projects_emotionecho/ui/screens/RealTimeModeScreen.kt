@@ -98,13 +98,6 @@ fun RealTimeModeScreen(
                 bufferSize
             )
 
-            audioRecord?.startRecording()
-            Log.d("AUDIO_RECORDING", "Recording started")
-            if (audioRecord?.recordingState != AudioRecord.RECORDSTATE_RECORDING) {
-                Log.e("AUDIO_RECORDING", "Failed to start recording")
-                return
-            }
-
             // Start coroutine to load the Python module
             loading = true // Show spinner
             lateinit var acceptAudio: PyObject
@@ -119,6 +112,13 @@ fun RealTimeModeScreen(
                 }
             }
 
+            audioRecord?.startRecording()
+            Log.d("AUDIO_RECORDING", "Recording started")
+            if (audioRecord?.recordingState != AudioRecord.RECORDSTATE_RECORDING) {
+                Log.e("AUDIO_RECORDING", "Failed to start recording")
+                return
+            }
+
             val audioDataList = mutableListOf<Byte>()
 
             recordingThread = Thread {
@@ -131,6 +131,10 @@ fun RealTimeModeScreen(
                         }
                         if (audioDataList.size >= sampleRate * 3 * 2) {
                             val audioData = audioDataList.toByteArray()
+
+                            val firstPartOfAudioData = audioData.take(20).joinToString(", ") { it.toString() }
+                            Log.d("AUDIO_CHECK", "First part of audio data: $firstPartOfAudioData")
+
                             acceptAudio.callAttr("testing", audioData)
                             audioDataList.clear()
                         }
