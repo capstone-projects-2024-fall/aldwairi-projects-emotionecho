@@ -15,7 +15,7 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
+        multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -76,6 +76,8 @@ dependencies {//Android
     implementation(libs.androidx.lifecycle.runtime.ktx.v286)
 
     /** Compose **/
+    implementation(libs.arthenica.ffmpeg.kit.full)
+    implementation (libs.androidx.multidex)
     implementation(platform(libs.androidx.compose.bom.v20240903))
     implementation(libs.androidx.activity.compose.v192)
     //noinspection UseTomlInstead

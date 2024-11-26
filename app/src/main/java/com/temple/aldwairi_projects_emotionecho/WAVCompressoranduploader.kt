@@ -1,41 +1,17 @@
 package com.temple.aldwairi_projects_emotionecho
 
+
 import android.util.Log
+import com.arthenica.ffmpegkit.FFmpegKit
+import com.arthenica.ffmpegkit.ReturnCode
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
 import java.io.IOException
 
 class WAVCompressoranduploader {
 
     private val storage: FirebaseStorage by lazy { FirebaseStorage.getInstance() }
-
-    /**
-     * Compresses a WAV file and uploads it to Firebase Storage.
-     * @param wavFile The WAV file to compress.
-     * @param username The username to create a folder in Firebase Storage.
-     * @param onSuccess A lambda expression called on successful upload.
-     * @param onFailure A lambda expression called on upload failure.
-     */
-    fun compressAndUploadWAV(
-        wavFile: File,
-        username: String,
-        onSuccess: () -> Unit,
-        onFailure: (Exception) -> Unit
-    ) {
-        // Step 1: Compress the WAV file
-        try {
-            val compressedFile = compressWAVFile(wavFile)
-
-            // Step 2: Upload the compressed file
-            uploadToFirebaseStorage(compressedFile, username, onSuccess, onFailure)
-        } catch (e: Exception) {
-            Log.e(TAG, "Error during WAV compression or upload: ", e)
-            onFailure(e)
-        }
-    }
 
     /**
      * Compresses a WAV file by reducing its bitrate.
@@ -44,22 +20,21 @@ class WAVCompressoranduploader {
      * @throws IOException if compression fails.
      */
     @Throws(IOException::class)
-    private fun compressWAVFile(originalFile: File): File {
+    fun compressWAVFile(originalFile: File, onCompletion: (File?, Exception?) -> Unit) {
         val compressedFile = File(originalFile.parent, "compressed_${originalFile.name}")
+        val command = "-i \"${originalFile.absolutePath}\" -b:a 128k \"${compressedFile.absolutePath}\""
 
-        // Placeholder for actual compression logic (bitrate reduction, etc.)
-        FileInputStream(originalFile).use { inputStream ->
-            FileOutputStream(compressedFile).use { outputStream ->
-                val buffer = ByteArray(1024)
-                var bytesRead: Int
-                while (inputStream.read(buffer).also { bytesRead = it } != -1) {
-                    outputStream.write(buffer, 0, bytesRead)
-                }
+        FFmpegKit.executeAsync(command) { session ->
+            val returnCode = session.returnCode
+            if (ReturnCode.isSuccess(returnCode)) {
+                Log.d(TAG, "Compression successful: ${compressedFile.absolutePath}")
+                onCompletion(compressedFile, null)
+            } else {
+                val error = IOException("FFmpeg compression failed with return code: $returnCode")
+                Log.e(TAG, "Compression failed", error)
+                onCompletion(null, error)
             }
         }
-
-        Log.d(TAG, "Compressed file created at: ${compressedFile.absolutePath}")
-        return compressedFile
     }
 
     /**
@@ -69,16 +44,41 @@ class WAVCompressoranduploader {
      * @param onSuccess A lambda expression called on successful upload.
      * @param onFailure A lambda expression called on upload failure.
      */
-    private fun uploadToFirebaseStorage(
-        file: File,
+
+    fun wavFileToByteArray(wavFilePath: String): ByteArray? {
+        return try {
+            val wavFile = File(wavFilePath)
+            if (wavFile.exists()) {
+                wavFile.readBytes()
+            } else {
+                println("File not found: $wavFilePath")
+                null
+            }
+        } catch (e: IOException) {
+            println("Error reading file: ${e.message}")
+            null
+        }
+    }
+
+    /**
+     * Uploads a byte array to Firebase Storage.
+     * @param wavFileToByteArray The byte array to upload.
+     * @param fileName The name of the file in Firebase Storage.
+     * @param username The username for folder creation in Firebase Storage.
+     * @param onSuccess A lambda expression called on successful upload.
+     * @param onFailure A lambda expression called on upload failure.
+     */
+    fun uploadByteArrayToFirebaseStorage(
+        wavFileToByteArray: ByteArray,
+        fileName: String,
         username: String,
         onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit
     ) {
         val storageRef: StorageReference = storage.reference
-        val userFolderRef = storageRef.child("$username/${file.name}")
+        val userFolderRef = storageRef.child("$username/$fileName")
 
-        userFolderRef.putFile(file.toURI().toURL().toUri())
+        userFolderRef.putBytes(wavFileToByteArray)
             .addOnSuccessListener {
                 Log.d(TAG, "File successfully uploaded to: $userFolderRef")
                 onSuccess()
