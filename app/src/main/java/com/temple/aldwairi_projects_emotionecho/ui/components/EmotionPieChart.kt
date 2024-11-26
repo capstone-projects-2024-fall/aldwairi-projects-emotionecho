@@ -1,5 +1,6 @@
 package com.temple.aldwairi_projects_emotionecho.ui.components
 
+import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,6 +14,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,33 +42,53 @@ fun processFloatList(floatList: List<Float>): List<PieChartData> {
 @Composable
 fun PieChartWithLegend(floatList: List<Float>) {
     val data = processFloatList(floatList)
+    val totalValue = data.sumOf { it.value.toDouble() }.toFloat()
+
     Surface(
         modifier = Modifier
             .wrapContentSize()
             .padding(10.dp)
-    ){
+    ) {
         Row {
             PieChart(data = data)
             Spacer(modifier = Modifier.width(5.dp))
-            Column{
+            Column {
                 data.forEach { slice ->
-                    LegendItem(color = slice.color, text = slice.label)
+                    val percentage = (slice.value / totalValue) * 100
+                    LegendItem(color = slice.color, text = "${slice.label} (${percentage.format(1)}%)")
                 }
             }
         }
     }
 }
 
+fun Float.format(digits: Int) = "%.${digits}f".format(this)
+
+
 @Composable
 fun PieChart(
-    data: List<PieChartData>
+    data: List<PieChartData>,
+    modifier: Modifier = Modifier
 ) {
     val totalValue = data.sumOf { it.value.toDouble() }.toFloat()
-    var startAngle = 0f
 
-    Canvas(modifier = Modifier.size(150.dp)) {
-        data.forEach { slice ->
-            val sweepAngle = (slice.value / totalValue) * 360f
+    // Internal state for previous data values
+    val previousData = remember { mutableStateOf(data.map { it.value }) }
+    val animatedValues = remember { data.map { Animatable(0f) } }
+
+    // Trigger animations when data changes
+    LaunchedEffect(data) {
+        data.forEachIndexed { index, slice ->
+            val targetValue = (slice.value / totalValue) * 360f
+            animatedValues[index].animateTo(targetValue)
+        }
+        previousData.value = data.map { it.value }
+    }
+
+    Canvas(modifier = modifier.size(150.dp)) {
+        var startAngle = 0f
+        data.forEachIndexed { index, slice ->
+            val sweepAngle = animatedValues[index].value
             drawArc(
                 color = slice.color,
                 startAngle = startAngle,
@@ -75,12 +99,15 @@ fun PieChart(
         }
     }
 }
+
+
+
 @Composable
 fun LegendItem(color: Color, text: String) {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
-    ){
+    ) {
         Canvas(modifier = Modifier.size(16.dp)) {
             drawCircle(color = color)
         }
