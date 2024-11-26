@@ -40,6 +40,7 @@ import android.Manifest
 import android.util.Log
 import com.chaquo.python.PyObject
 import com.temple.aldwairi_projects_emotionecho.MainActivity
+import com.temple.aldwairi_projects_emotionecho.ui.components.AnimatedEmotionField
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -62,6 +63,9 @@ fun RealTimeModeScreen(
     // Audio recording variables (global within the composable)
     var audioRecord: AudioRecord? = remember { mutableStateOf<AudioRecord?>(null).value }
     var recordingThread: Thread? = remember { mutableStateOf<Thread?>(null).value }
+
+    // State for Emotion and Color
+    var currentEmotion by remember { mutableStateOf("No Emotion Yet...") }
 
     fun initializeFloatList(floatListParam: List<Float>) {
         floatList.value = floatListParam
@@ -138,6 +142,10 @@ fun RealTimeModeScreen(
                             val objList = python.getModule("resultProcess").callAttr("get_emotions_percentage",
                                 Gson().toJson(emotionArrayList))
                             initializeFloatList(objList.asList().map { it.toString().toFloat() })
+
+                            // Update current emotion and color based on the emotion result
+                            currentEmotion = emotion.toString().replaceFirstChar { it.uppercase() }
+
                             audioDataList.clear()
                         }
                     }
@@ -171,6 +179,14 @@ fun RealTimeModeScreen(
             verticalArrangement = Arrangement.Center
         ) {
             floatList.value?.let { PieChartWithLegend(it) }
+
+            // Animated field to display emotion and color
+            Spacer(modifier = Modifier.height(20.dp))
+            AnimatedEmotionField(
+                emotion = currentEmotion
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
 
             ExposedDropdownMenuBox(
                 expanded = true,
@@ -207,7 +223,6 @@ fun RealTimeModeScreen(
                 listOf(Color.Black, Color.Gray)
             ) {
                 Toast.makeText(context, "Analyzing started using $option mic", Toast.LENGTH_LONG).show()
-
                 toggleRecording()
             }
 
@@ -230,4 +245,5 @@ fun PreviewRealTimeModeScreen() {
     val mockContext = LocalContext.current
     RealTimeModeScreen(mockContext, Modifier.padding(20.dp))
 }
+
 
