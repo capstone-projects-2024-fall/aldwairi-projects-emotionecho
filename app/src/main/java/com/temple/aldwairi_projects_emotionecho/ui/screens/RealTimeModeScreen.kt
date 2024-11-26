@@ -137,7 +137,7 @@ fun RealTimeModeScreen(
                         if (audioDataList.size >= sampleRate * 3 * 2) {
                             val audioData = audioDataList.toByteArray()
 
-                            val emotion = acceptAudio.callAttr("testing", audioData)
+                            val emotion = acceptAudio.callAttr("process_and_classify", audioData)
                             emotionArrayList.add(emotion.toString())
                             val objList = python.getModule("resultProcess").callAttr("get_emotions_percentage",
                                 Gson().toJson(emotionArrayList))
