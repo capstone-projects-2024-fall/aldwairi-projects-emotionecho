@@ -15,7 +15,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,7 +24,7 @@ import com.temple.aldwairi_projects_emotionecho.ui.components.CustomClickableTex
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomDividerWithText
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomTextInput
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen.LoginScreen
-import com.temple.aldwairi_projects_emotionecho.ui.theme.TempleCherryRed
+import com.temple.aldwairi_projects_emotionecho.ui.theme.AldwairiprojectsemotionechoTheme
 
 @Composable
 fun SignupScreen(
@@ -68,8 +67,7 @@ fun SignupScreen(
                 testTag = "USERNAME_TEST",
             )
             CustomButton(
-                text = "Sign Up!",
-                brush = listOf(Color.Black, TempleCherryRed)
+                text = "Sign Up!"
             ) { TODO() }
             CustomDividerWithText()
             CustomClickableText(
@@ -86,5 +84,7 @@ fun SignupScreen(
 @Preview(showBackground = true)
 @Composable
 fun PreviewSignupScreen(){
-    SignupScreen(LocalContext.current)
+    AldwairiprojectsemotionechoTheme(darkTheme = false) {
+        SignupScreen(LocalContext.current)
+    }
 }

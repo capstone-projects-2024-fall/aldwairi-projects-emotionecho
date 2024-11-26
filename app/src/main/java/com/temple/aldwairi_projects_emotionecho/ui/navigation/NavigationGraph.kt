@@ -12,15 +12,26 @@ import com.temple.aldwairi_projects_emotionecho.ui.screens.PracticeModeScreen
 import com.temple.aldwairi_projects_emotionecho.ui.screens.RealTimeModeScreen
 import com.temple.aldwairi_projects_emotionecho.ui.screens.SignupScreen
 
+/**
+ * Custom function for creating a NavHost
+ *
+ * @param modifier Takes in a modifier to adjust for screens using the Scaffold's bottomBar
+ * @param navController Used in tandem with the NavHost to switch composable screens
+ * @param context Application Context
+ * @param dynamicColor Used to give the user a choice between using the custom
+ * application color scheme or their system color scheme.
+ */
 @Composable
 fun NavigationGraph(
     modifier: Modifier,
     navController: NavHostController,
-    context: Context
+    context: Context,
+    dynamicColor: Boolean
 ){
     NavHost(
         navController = navController,
-        startDestination = Screen.PracticeModeScreen.screenRoute){
+        startDestination = Screen.PracticeModeScreen.screenRoute
+    ){
 //        TODO: uncomment once all screens are fully implemented
         composable(Screen.LoginScreen.screenRoute) {
             LogInScreen(LocalContext.current)
@@ -29,7 +40,7 @@ fun NavigationGraph(
             SignupScreen(LocalContext.current)
         }
 //        composable(Screen.SettingsScreen.screenRoute) {
-//            SettingsScreen(modifier)
+//            SettingsScreen(modifier, dynamicColor)
 //        }
 //        composable(Screen.HomeScreen.screenRoute) {
 //            HomeScreen(modifier)
