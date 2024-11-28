@@ -55,10 +55,15 @@ fun TutorialNavBarItemBox(bounds: Rect, stepDescription: String, focusNavBarItem
             .background(Color(0xCC000000))
     ){
         val fontSize = 16.sp
-        val v = LocalDensity.current
-        val textHeight = with(LocalDensity.current){fontSize.toPx()}
+        val screenDensity = LocalDensity.current
         val screenHeight = LocalContext.current.resources.displayMetrics.heightPixels
         val screenWidth = LocalContext.current.resources.displayMetrics.widthPixels
+
+        val textHeight = with(screenDensity){fontSize.toPx()}
+        val textWidth = with(screenDensity){(bounds.width - 16).toSp().toPx()}
+
+        val estimatedTextLines = (stepDescription.length/(textWidth/fontSize.value)).toInt() + 1
+        val totalTextHeight = estimatedTextLines * textHeight * 2
         Text(
             text = stepDescription,
             color = Color.White,
@@ -66,9 +71,10 @@ fun TutorialNavBarItemBox(bounds: Rect, stepDescription: String, focusNavBarItem
             modifier = Modifier.offset {
                 if(focusNavBarItem){
                     Log.d("TUTORIAL", "x = ${bounds.left}, y = ${bounds.right}")
+                    val offsetY = bounds.top - totalTextHeight
                     IntOffset(
                         x = (bounds.left+16).toInt(),
-                        y = (bounds.top - textHeight*20/density).toInt()
+                        y = if (offsetY < 0) 0 else offsetY.toInt()
                     )
                 }else{
                     Log.d("TUTORIAL", "x = ${(screenWidth / 2) - (bounds.width / 2)}, y = ${(screenHeight / 4)}")
@@ -78,7 +84,7 @@ fun TutorialNavBarItemBox(bounds: Rect, stepDescription: String, focusNavBarItem
                     )
                 }
             }
-                .width(with(v){bounds.width.toDp()-16.dp})
+                .width(with(screenDensity){bounds.width.toDp()-16.dp})
         )
     }
 }
