@@ -2,6 +2,7 @@ package com.temple.aldwairi_projects_emotionecho.ui.components
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
@@ -18,6 +19,7 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
@@ -29,6 +31,9 @@ fun TutorialNavBarItemBox(bounds: Rect, stepDescription: String, focusNavBarItem
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .pointerInput(Unit){
+                detectTapGestures {  }
+            }
             .graphicsLayer {
                 compositingStrategy = CompositingStrategy.Offscreen
             }
