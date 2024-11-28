@@ -1,5 +1,6 @@
 package com.temple.aldwairi_projects_emotionecho.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,13 +18,14 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun TutorialNavBarItemBox(bounds: Rect, stepDescription: String) {
+fun TutorialNavBarItemBox(bounds: Rect, stepDescription: String, focusNavBarItem: Boolean) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -32,31 +34,44 @@ fun TutorialNavBarItemBox(bounds: Rect, stepDescription: String) {
             }
             .drawWithContent {
                 drawContent()
-                drawRoundRect(
-                    color = Color(0xFFFFFFFF),
-                    topLeft = Offset(
-                        x = bounds.left,
-                        y = bounds.top
-                    ),
-                    size = Size(bounds.width, bounds.height),
-                    blendMode = BlendMode.DstOut,
-                    cornerRadius = CornerRadius(50.dp.toPx())
-                )
+                if(focusNavBarItem){
+                    drawRoundRect(
+                        color = Color(0xFFFFFFFF),
+                        topLeft = Offset(
+                            x = bounds.left,
+                            y = bounds.top
+                        ),
+                        size = Size(bounds.width, bounds.height),
+                        blendMode = BlendMode.DstOut,
+                        cornerRadius = CornerRadius(50.dp.toPx())
+                    )
+                }
             }
             .background(Color(0xCC000000))
     ){
         val fontSize = 16.sp
         val v = LocalDensity.current
         val textHeight = with(LocalDensity.current){fontSize.toPx()}
+        val screenHeight = LocalContext.current.resources.displayMetrics.heightPixels
+        val screenWidth = LocalContext.current.resources.displayMetrics.widthPixels
         Text(
             text = stepDescription,
             color = Color.White,
             fontSize = fontSize,
             modifier = Modifier.offset {
-                IntOffset(
-                    x = (bounds.left+16).toInt(),
-                    y = (bounds.top - textHeight*20/density).toInt()
-                )
+                if(focusNavBarItem){
+                    Log.d("TUTORIAL", "x = ${bounds.left}, y = ${bounds.right}")
+                    IntOffset(
+                        x = (bounds.left+16).toInt(),
+                        y = (bounds.top - textHeight*20/density).toInt()
+                    )
+                }else{
+                    Log.d("TUTORIAL", "x = ${(screenWidth / 2) - (bounds.width / 2)}, y = ${(screenHeight / 4)}")
+                    IntOffset(
+                        x = (screenWidth / 2) - (bounds.width / 2).toInt(),
+                        y = (screenHeight / 4) // Position closer to the top
+                    )
+                }
             }
                 .width(with(v){bounds.width.toDp()-16.dp})
         )
