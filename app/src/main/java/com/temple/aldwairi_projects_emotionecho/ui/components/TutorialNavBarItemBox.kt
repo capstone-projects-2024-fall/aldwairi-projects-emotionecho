@@ -58,7 +58,7 @@ fun TutorialNavBarItemBox(bounds: Rect, stepDescription: String) {
                     y = (bounds.top - textHeight*20/density).toInt()
                 )
             }
-                .width(with(v){bounds.width.toDp()})
+                .width(with(v){bounds.width.toDp()-16.dp})
         )
     }
 }
