@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">aldwairi-projects-emotionecho</string>
+
+    <string name="tutorial_step_Introduction_description">Welcome to Emotion Echo!\n\n
+        Find out how you sound!\n\n
+        Our app will help you learn to recognize emotions through our integrated machine learning
+        model!</string>
+    <string name="tutorial_step_PracticeMode_description">Request a random audio clip and put your emotion
+        recognition skills to the test!</string>
+    <string name="tutorial_step_RealTimeMode_description">Record your own voice and find out how others may
+        perceive what you are saying!</string>
+    <string name="tutorial_step_HomeScreen_description">Track your progress and see how you\'ve
+        improved!</string>
+    <string name="tutorial_step_SettingsScreen_description">Customize the app and logout
+        when you need a break.</string>
 </resources>
