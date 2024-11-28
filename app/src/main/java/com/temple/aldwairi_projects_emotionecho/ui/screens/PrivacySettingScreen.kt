@@ -1,18 +1,20 @@
 package com.temple.aldwairi_projects_emotionecho.ui.screens
 
 import android.content.Context
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.platform.LocalContext
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomButton
-import com.temple.aldwairi_projects_emotionecho.ui.theme.TempleCherryRed
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.EmotionEchoAppRouter
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen
 
@@ -36,7 +38,6 @@ fun PrivacySettingScreen(
 
         CustomButton(
             text = "Log Out",
-            brush = listOf(TempleCherryRed, Black), // You can customize the colors if desired
             onClick = navigateToLogin
         )
     }
