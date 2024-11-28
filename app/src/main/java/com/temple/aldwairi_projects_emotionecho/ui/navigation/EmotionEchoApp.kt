@@ -63,7 +63,7 @@ fun EmotionEchoApp(context: Context){
                 Box(modifier = Modifier.fillMaxSize()) {
                     // Add buttons for "Next" and "Previous"
                     Button(
-                        onClick = { if (tutorialStep <= navBarItemLocationOnScreen.value.size) tutorialStep++ },
+                        onClick = { if (tutorialStep < navBarItemLocationOnScreen.value.size) tutorialStep++ },
                         modifier = Modifier.align(Alignment.CenterEnd)
                     ) {
                         Text("Next")
