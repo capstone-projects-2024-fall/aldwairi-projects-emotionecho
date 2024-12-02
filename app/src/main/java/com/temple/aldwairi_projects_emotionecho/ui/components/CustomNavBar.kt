@@ -1,7 +1,6 @@
 package com.temple.aldwairi_projects_emotionecho.ui.components
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -23,11 +22,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen.PracticeModeScreen
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen.RealTimeModeScreen
+import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen.SettingsScreen
 import com.temple.aldwairi_projects_emotionecho.ui.theme.AldwairiprojectsemotionechoTheme
 
 @Composable
 fun CustomNavBar(navController: NavController, navItemCoordinates: MutableState<Map<String, LayoutCoordinates>>){
-    val screen = listOf(PracticeModeScreen, RealTimeModeScreen)
+    val screen = listOf(PracticeModeScreen, RealTimeModeScreen, SettingsScreen)
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 

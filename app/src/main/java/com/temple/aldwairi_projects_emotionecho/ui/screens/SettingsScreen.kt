@@ -1,34 +1,34 @@
 package com.temple.aldwairi_projects_emotionecho.ui.screens
 
-import android.content.Context
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.runtime.mutableStateOf
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomButton
-import com.temple.aldwairi_projects_emotionecho.ui.navigation.EmotionEchoAppRouter
-import com.temple.aldwairi_projects_emotionecho.ui.theme.AldwairiprojectsemotionechoTheme
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.App
-import com.temple.aldwairi_projects_emotionecho.ui.navigation.EmotionEchoAppRouter.currentScreen
-
+import com.temple.aldwairi_projects_emotionecho.ui.navigation.EmotionEchoAppRouter
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen.LoginScreen
+import com.temple.aldwairi_projects_emotionecho.ui.theme.AldwairiprojectsemotionechoTheme
 
 @Composable
-fun PrivacySettingScreen(
-    context: Context
+fun SettingsScreen(
+    modifier: Modifier,
+    dynamicColor: Boolean
 ) {
     val showDialog = remember { mutableStateOf(false) }
 
     Surface(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier
     ) {
         Column(
             modifier = Modifier
@@ -60,9 +60,8 @@ fun PrivacySettingScreen(
                     CustomButton(
                         text = "Yes",
                         onClick = {
-                            EmotionEchoAppRouter.changeApp(App.Main)
                             EmotionEchoAppRouter.navigateTo(LoginScreen)
-                            showDialog.value = false
+                            EmotionEchoAppRouter.changeApp(App.Login)
                         }
                     )
                 },
@@ -82,7 +81,7 @@ fun PrivacySettingScreen(
 @Composable
 fun PreviewPrivacySettingScreen() {
     AldwairiprojectsemotionechoTheme(darkTheme = false) {
-        PrivacySettingScreen(context = LocalContext.current)
+        SettingsScreen(Modifier, false)
     }
 }
 
