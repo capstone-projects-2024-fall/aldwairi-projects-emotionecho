@@ -18,3 +18,4 @@ class ModelLoader:
             return model
         except Exception as e:
             raise IOError(f"Failed to load model: {e}")
+

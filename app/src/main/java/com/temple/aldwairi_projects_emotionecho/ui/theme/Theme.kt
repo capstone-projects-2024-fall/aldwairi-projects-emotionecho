@@ -9,11 +9,54 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+
+data class ExtendedColors(val link: Color)
+val LocalExtendedColors = staticCompositionLocalOf { ExtendedColors(link = Color.Unspecified) }
+
+private val DarkTempleColorScheme = darkColorScheme(
+    primary = TempleCherryRed80,
+    onPrimary = TempleCherryRed37,
+    primaryContainer = TempleCherryRed20,
+    onPrimaryContainer = TempleYellow90,
+    inversePrimary = TempleCherryRed50,
+    secondary = TempleYellow80,
+    onSecondary = TempleYellow30,
+    secondaryContainer = TempleYellow20,
+    onSecondaryContainer = TempleYellow90,
+    tertiary = TempleMetallicSilver85,
+    onTertiary = TempleMetallicSilver35,
+    tertiaryContainer = TempleMetallicSilver25,
+    onTertiaryContainer = TempleMetallicSilver95,
+    surface = TempleCherryRed10,
+    outline = TempleCherryRed37,
+    outlineVariant = TempleCherryRed20
+)
+private val LightTempleColorScheme = lightColorScheme(
+    primary = TempleCherryRed37,
+    onPrimary = Color.White,
+    primaryContainer = TempleCherryRed80,
+    onPrimaryContainer = TempleYellow10,
+    inversePrimary = TempleCherryRed70,
+    secondary = TempleYellow40,
+    onSecondary = Color.White,
+    secondaryContainer = TempleYellow90,
+    onSecondaryContainer = TempleYellow10,
+    tertiary = TempleMetallicSilver45,
+    onTertiary = Color.White,
+    tertiaryContainer = TempleMetallicSilver95,
+    onTertiaryContainer = TempleMetallicSilver15,
+    surface = TempleCherryRed90,
+    outline = TempleCherryRed60,
+    outlineVariant = TempleCherryRed70
+)
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -41,7 +84,7 @@ private val LightColorScheme = lightColorScheme(
 fun AldwairiprojectsemotionechoTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
@@ -50,21 +93,28 @@ fun AldwairiprojectsemotionechoTheme(
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        darkTheme -> DarkTempleColorScheme
+        else -> LightTempleColorScheme
     }
+
+    val extendedColors = ExtendedColors(
+        link = if(darkTheme) Color.Cyan else Color.Blue
+    )
+
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.primary.toArgb()
+            window.statusBarColor = colorScheme.secondary.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
+    CompositionLocalProvider(LocalExtendedColors provides extendedColors) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = Typography,
+            content = content
+        )
+    }
 }
