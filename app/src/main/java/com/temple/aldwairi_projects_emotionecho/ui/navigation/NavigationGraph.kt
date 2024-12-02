@@ -26,7 +26,7 @@ fun NavigationGraph(
     modifier: Modifier,
     navController: NavHostController,
     context: Context,
-    dynamicColor: Boolean
+    dynamicColor: Boolean = false
 ){
     NavHost(
         navController = navController,
