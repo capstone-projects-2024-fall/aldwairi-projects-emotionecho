@@ -2,6 +2,7 @@ package com.temple.aldwairi_projects_emotionecho.ui.navigation
 
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
@@ -27,7 +28,7 @@ fun NavigationGraph(
     modifier: Modifier,
     navController: NavHostController,
     context: Context,
-    dynamicColor: Boolean = false
+    dynamicColor: MutableState<Boolean>
 ){
     NavHost(
         navController = navController,

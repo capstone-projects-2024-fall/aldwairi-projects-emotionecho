@@ -42,8 +42,11 @@ fun EmotionEchoApp(context: Context){
     var isTutorialActive by rememberSaveable { mutableStateOf(true) }
     var tutorialStep by rememberSaveable { mutableIntStateOf(0) }
     val navBarItemLocationOnScreen = remember {mutableStateOf<Map<String, LayoutCoordinates>>(emptyMap())}
+    val dynamicColor = remember { mutableStateOf(false) }
 
-    AldwairiprojectsemotionechoTheme{
+    AldwairiprojectsemotionechoTheme(
+        dynamicColor = dynamicColor.value
+    ){
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -54,7 +57,8 @@ fun EmotionEchoApp(context: Context){
                 NavigationGraph(
                     modifier = Modifier.padding(innerPadding),
                     navController = navController,
-                    context = context
+                    context = context,
+                    dynamicColor
                 )
             }
 
