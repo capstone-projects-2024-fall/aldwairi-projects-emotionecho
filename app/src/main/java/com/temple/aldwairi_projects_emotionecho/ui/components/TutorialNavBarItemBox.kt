@@ -63,7 +63,7 @@ fun TutorialNavBarItemBox(bounds: Rect, stepDescription: String, focusNavBarItem
         val textWidth = with(screenDensity){(bounds.width - 16).toSp().toPx()}
 
         val estimatedTextLines = (stepDescription.length/(textWidth/fontSize.value)).toInt() + 1
-        val totalTextHeight = estimatedTextLines * textHeight * 2
+        val totalTextHeight = estimatedTextLines * textHeight * 3
         Text(
             text = stepDescription,
             color = Color.White,
