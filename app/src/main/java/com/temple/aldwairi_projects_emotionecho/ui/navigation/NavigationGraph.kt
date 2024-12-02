@@ -2,6 +2,7 @@ package com.temple.aldwairi_projects_emotionecho.ui.navigation
 
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
@@ -9,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.temple.aldwairi_projects_emotionecho.ui.screens.LogInScreen
 import com.temple.aldwairi_projects_emotionecho.ui.screens.PracticeModeScreen
+import com.temple.aldwairi_projects_emotionecho.ui.screens.SettingsScreen
 import com.temple.aldwairi_projects_emotionecho.ui.screens.RealTimeModeScreen
 import com.temple.aldwairi_projects_emotionecho.ui.screens.SignupScreen
 
@@ -26,7 +28,7 @@ fun NavigationGraph(
     modifier: Modifier,
     navController: NavHostController,
     context: Context,
-    dynamicColor: Boolean = false
+    dynamicColor: MutableState<Boolean>
 ){
     NavHost(
         navController = navController,
@@ -39,9 +41,9 @@ fun NavigationGraph(
         composable(Screen.SingupScreen.screenRoute) {
             SignupScreen(LocalContext.current)
         }
-//        composable(Screen.SettingsScreen.screenRoute) {
-//            SettingsScreen(modifier, dynamicColor)
-//        }
+        composable(Screen.SettingsScreen.screenRoute) {
+            SettingsScreen(modifier, dynamicColor)
+        }
 //        composable(Screen.HomeScreen.screenRoute) {
 //            HomeScreen(modifier)
 //        }

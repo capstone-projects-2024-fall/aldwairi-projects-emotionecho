@@ -30,18 +30,23 @@ import com.temple.aldwairi_projects_emotionecho.ui.components.CustomNavBar
 import com.temple.aldwairi_projects_emotionecho.ui.components.TutorialNavBarItemBox
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen.PracticeModeScreen
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen.RealTimeModeScreen
+import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen.SettingsScreen
 import com.temple.aldwairi_projects_emotionecho.ui.theme.AldwairiprojectsemotionechoTheme
 import com.temple.aldwairi_projects_emotionecho.R.string.tutorial_step_Introduction_description
 import com.temple.aldwairi_projects_emotionecho.R.string.tutorial_step_PracticeMode_description
 import com.temple.aldwairi_projects_emotionecho.R.string.tutorial_step_RealTimeMode_description
+import com.temple.aldwairi_projects_emotionecho.R.string.tutorial_step_SettingsScreen_description
 
 @Composable
 fun EmotionEchoApp(context: Context){
     var isTutorialActive by rememberSaveable { mutableStateOf(true) }
     var tutorialStep by rememberSaveable { mutableIntStateOf(0) }
     val navBarItemLocationOnScreen = remember {mutableStateOf<Map<String, LayoutCoordinates>>(emptyMap())}
+    val dynamicColor = remember { mutableStateOf(false) }
 
-    AldwairiprojectsemotionechoTheme{
+    AldwairiprojectsemotionechoTheme(
+        dynamicColor = dynamicColor.value
+    ){
         Surface(
             modifier = Modifier.fillMaxSize()
         ) {
@@ -52,7 +57,8 @@ fun EmotionEchoApp(context: Context){
                 NavigationGraph(
                     modifier = Modifier.padding(innerPadding),
                     navController = navController,
-                    context = context
+                    context = context,
+                    dynamicColor
                 )
             }
 
@@ -93,7 +99,8 @@ fun TutorialOverlay(navBarItemLocation: Map<String, LayoutCoordinates>, tutorial
     val tutorialSteps = listOf(
         TutorialStep(null, stringResource(tutorial_step_Introduction_description)),
         TutorialStep(PracticeModeScreen.screenRoute, stringResource(tutorial_step_PracticeMode_description)),
-        TutorialStep(RealTimeModeScreen.screenRoute, stringResource(tutorial_step_RealTimeMode_description))
+        TutorialStep(RealTimeModeScreen.screenRoute, stringResource(tutorial_step_RealTimeMode_description)),
+        TutorialStep(SettingsScreen.screenRoute, stringResource(tutorial_step_SettingsScreen_description))
     )
 
     if(tutorialStep in tutorialSteps.indices){
