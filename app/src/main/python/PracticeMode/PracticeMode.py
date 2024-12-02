@@ -1,17 +1,38 @@
 # implement practice mode functionality
 import random
+import os
+import pandas as pd
+from playsound import playsound
+
 class PracticeMode:
-    def __init__(self):
-        self.audio_clips = [
-            ## DATABASE audio clips
+    def __init__(self, data_path):
+        self.audio_clips = self.get_metadata(data_path)
+
+    def get_metadata(self, data_path):
+        file = os.path.join(data_path, "metadata.csv")
+        if not os.path.exists(file):
+            raise FileNotFoundError(f"Metadata file not found at {file}")
+
+        # Load metadata using pandas
+        metadata = pd.read_csv(file)
+        return [
+            {
+                "clip_id": row["FileName"],
+                "audio_path": os.path.join(data_path, row["FileName"]),
+                "emotion_label": row["Emotion"].lower()
+            }
+            for _, row in metadata.iterrows()
         ]
+
+
     # Pulls random audio clip from database
     def get_audio(self):
         return random.choice(self.audio_clips)
     # play clip in UI
     def play_audio(self, audio_path):
         # filler
-        return
+        print("Playing Random Audio...")
+        playsound(audio_path)
     def get_user_emotion_input(self):
         # filler prompt for UI
         return input("Enter the emotion you hear: ").strip().lower()
@@ -29,6 +50,13 @@ class PracticeMode:
         user_emotion = self.get_user_emotion_input()
         # Provide feedback
         self.provide_feedback(clip["emotion_label"], user_emotion)
-# Sample use
-practice_mode = PracticeMode()
-practice_mode.run_example()
+
+# # Sample use
+# practice_mode = PracticeMode()
+# practice_mode.run_example()
+
+# Example usage
+if __name__ == "__main__":
+    dataset_path = "app/src/main/python/PracticeMode/practicemode_dataset"  # Update with actual dataset path
+    practice_mode = PracticeMode(dataset_path)
+    practice_mode.run_example()
