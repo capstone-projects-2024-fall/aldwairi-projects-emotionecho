@@ -12,7 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomButton
-import com.temple.aldwairi_projects_emotionecho.ui.theme.TempleCherryRed
+import com.temple.aldwairi_projects_emotionecho.ui.theme.TempleCherryRed20
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.EmotionEchoAppRouter
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen
 
@@ -36,7 +36,7 @@ fun PrivacySettingScreen(
 
         CustomButton(
             text = "Log Out",
-            brush = listOf(TempleCherryRed, Black), // You can customize the colors if desired
+            //brush = listOf(TempleCherryRed20, Black), // You can customize the colors if desired
             onClick = navigateToLogin
         )
     }

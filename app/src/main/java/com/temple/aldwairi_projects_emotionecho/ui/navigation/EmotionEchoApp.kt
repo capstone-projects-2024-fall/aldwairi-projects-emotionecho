@@ -24,7 +24,8 @@ fun EmotionEchoApp(context: Context){
                 NavigationGraph(
                     modifier = Modifier.padding(innerPadding),
                     navController = navController,
-                    context = context
+                    context = context,
+                    dynamicColor = false
                 )
             }
         }
