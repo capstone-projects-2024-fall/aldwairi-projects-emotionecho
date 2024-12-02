@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("com.google.gms.google-services")
-    id("com.chaquo.python")
+    id("com.chaquo.python") version "16.0.0"
 }
 
 android {
@@ -58,7 +58,7 @@ android {
 
     flavorDimensions += "pyVersion"
     productFlavors {
-        create("py311") { dimension = "pyVersion" }
+        create("py308"){ dimension = "pyVersion" }
     }
 }
 
@@ -66,11 +66,13 @@ android {
 chaquopy {
     defaultConfig {
         pip {
+            install("scipy")
+            install("torch")
             install("numpy")
         }
     }
     productFlavors {
-        getByName("py311") { version = "3.11" }
+        getByName("py308") { version = "3.8" }
     }
     sourceSets { }
 }
@@ -78,6 +80,7 @@ chaquopy {
 dependencies {//Android
     implementation(libs.androidx.core.ktx.v1131)
     implementation(libs.androidx.lifecycle.runtime.ktx.v286)
+
 
     /** Compose **/
     implementation(platform(libs.androidx.compose.bom.v20240903))

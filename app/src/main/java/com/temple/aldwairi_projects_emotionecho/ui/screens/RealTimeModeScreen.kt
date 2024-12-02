@@ -1,12 +1,7 @@
 package com.temple.aldwairi_projects_emotionecho.ui.screens
 
-import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.media.AudioFormat
-import android.media.AudioRecord
-import android.media.MediaRecorder
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,15 +24,26 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import com.chaquo.python.Python
 import com.google.gson.Gson
-import com.temple.aldwairi_projects_emotionecho.MainActivity
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomButton
 import com.temple.aldwairi_projects_emotionecho.ui.components.PieChartWithLegend
+import android.media.AudioFormat
+import android.media.AudioRecord
+import android.media.MediaRecorder
+import androidx.core.content.ContextCompat
+import android.Manifest
+import android.util.Log
+import com.chaquo.python.PyObject
+import com.temple.aldwairi_projects_emotionecho.MainActivity
+import com.temple.aldwairi_projects_emotionecho.ui.components.AnimatedEmotionField
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,46 +58,42 @@ fun RealTimeModeScreen(
     val python = Python.getInstance()
     val microphoneChoice = listOf("internal", "external")
     val floatList = rememberSaveable { mutableStateOf<List<Float>?>(null) }
+    var loading by remember { mutableStateOf(false) } // Loading state
 
     // Audio recording variables (global within the composable)
     var audioRecord: AudioRecord? = remember { mutableStateOf<AudioRecord?>(null).value }
     var recordingThread: Thread? = remember { mutableStateOf<Thread?>(null).value }
 
+    // State for Emotion and Color
+    var currentEmotion by remember { mutableStateOf("No Emotion Yet...") }
+
     fun initializeFloatList(floatListParam: List<Float>) {
         floatList.value = floatListParam
     }
-    fun isInitialize(): Boolean{
-        return floatList.value != null
-    }
 
     fun stopRecording() {
-        // Stop and release the recording thread and AudioRecord
         recordingThread?.interrupt()
         audioRecord?.stop()
         audioRecord?.release()
-
-        // Clear the references
         audioRecord = null
         recordingThread = null
-
-        // Set recording state to false
         isRecording = false
-
         Log.d("TESTING", "Recording stopped and resources released.")
     }
 
     fun startRecording(context: Context, python: Python) {
-        // Check permission before starting
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
-
             val sampleRate = 44100
             val bufferSize = AudioRecord.getMinBufferSize(
                 sampleRate,
                 AudioFormat.CHANNEL_IN_MONO,
                 AudioFormat.ENCODING_PCM_16BIT
             )
+            if (bufferSize == AudioRecord.ERROR || bufferSize == AudioRecord.ERROR_BAD_VALUE) {
+                Log.e("AUDIO_RECORDING", "Invalid buffer size")
+                return
+            }
 
-            // Initialize AudioRecord
             audioRecord = AudioRecord(
                 MediaRecorder.AudioSource.MIC,
                 sampleRate,
@@ -100,35 +102,62 @@ fun RealTimeModeScreen(
                 bufferSize
             )
 
-            val acceptAudio = python.getModule("MainThread")
-            var audioBuffer = ByteArray(sampleRate * 6)
-            audioRecord?.startRecording()
+            // Start coroutine to load the Python module
+            loading = true // Show spinner
+            lateinit var acceptAudio: PyObject
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    acceptAudio = python.getModule("MainThread")
+                    Log.d("Initialization", "Loaded Python module: $acceptAudio")
+                } catch (e: Exception) {
+                    Log.e("Initialization", "Error loading Python module: ${e.message}")
+                } finally {
+                    loading = false // Hide spinner
+                }
+            }
 
-            // Start a new thread for recording audio
+            audioRecord?.startRecording()
+            Log.d("AUDIO_RECORDING", "Recording started")
+            if (audioRecord?.recordingState != AudioRecord.RECORDSTATE_RECORDING) {
+                Log.e("AUDIO_RECORDING", "Failed to start recording")
+                return
+            }
+
+            val audioDataList = mutableListOf<Byte>()
+            val emotionArrayList = ArrayList<String>()
+
             recordingThread = Thread {
                 try {
-                    var totalBytesRead = 0
+                    val buffer = ByteArray(bufferSize)
                     while (!Thread.interrupted()) {
-                        val readBytes = audioRecord?.read(audioBuffer, 0, bufferSize) ?: 0
+                        val readBytes = audioRecord?.read(buffer, 0, bufferSize) ?: 0
                         if (readBytes > 0) {
-                            totalBytesRead += readBytes
+                            audioDataList.addAll(buffer.take(readBytes))
                         }
-                        if (totalBytesRead >= sampleRate * 6){
-                            acceptAudio.callAttr("run_py_script", audioBuffer)
-                            totalBytesRead = 0
-                            audioBuffer = ByteArray(sampleRate * 6)
+                        if (audioDataList.size >= sampleRate * 3 * 2) {
+                            val audioData = audioDataList.toByteArray()
+
+                            val emotion = acceptAudio.callAttr("process_and_classify", audioData)
+                            emotionArrayList.add(emotion.toString())
+                            val objList = python.getModule("resultProcess").callAttr("get_emotions_percentage",
+                                Gson().toJson(emotionArrayList))
+                            initializeFloatList(objList.asList().map { it.toString().toFloat() })
+
+                            // Update current emotion and color based on the emotion result
+                            currentEmotion = emotion.toString().replaceFirstChar { it.uppercase() }
+
+                            audioDataList.clear()
                         }
                     }
+                    acceptAudio.callAttr("clear_dir")
+
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
             recordingThread?.start()
-
-            // Set recording state to true
             isRecording = true
         } else {
-            // If permission is not granted, request permission
             if (context is MainActivity) {
                 context.requestAudioPermission()
             }
@@ -143,8 +172,6 @@ fun RealTimeModeScreen(
         }
     }
 
-
-
     Surface(modifier = modifier) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -152,6 +179,14 @@ fun RealTimeModeScreen(
             verticalArrangement = Arrangement.Center
         ) {
             floatList.value?.let { PieChartWithLegend(it) }
+
+            // Animated field to display emotion and color
+            Spacer(modifier = Modifier.height(20.dp))
+            AnimatedEmotionField(
+                emotion = currentEmotion
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
 
             ExposedDropdownMenuBox(
                 expanded = true,
@@ -184,15 +219,21 @@ fun RealTimeModeScreen(
             Spacer(modifier = Modifier.height(50.dp))
 
             CustomButton(
-                if (isRecording) "Stop Recording" else "Start Recording and Analyzing"
+                if (isRecording) "Stop Recording" else "Start Recording and Analyzing",
+                listOf(Color.Black, Color.Gray)
             ) {
                 Toast.makeText(context, "Analyzing started using $option mic", Toast.LENGTH_LONG).show()
-
-                //change to display result screen
-                val objectList = python.getModule("resultProcess").callAttr("get_emotions_percentage", Gson().toJson(arrayListOf("neutral","happy","sad","calm","angry","fearful","disgust","surprised")))
-                initializeFloatList( objectList.asList().map { it.toString().toFloat() } )
-
                 toggleRecording()
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // Show spinner while loading
+            if (loading) {
+                androidx.compose.material3.CircularProgressIndicator(
+                    modifier = Modifier.padding(16.dp),
+                    color = Color.Blue
+                )
             }
         }
     }
@@ -204,3 +245,5 @@ fun PreviewRealTimeModeScreen() {
     val mockContext = LocalContext.current
     RealTimeModeScreen(mockContext, Modifier.padding(20.dp))
 }
+
+
