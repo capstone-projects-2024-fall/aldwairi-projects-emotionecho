@@ -1,6 +1,7 @@
 package com.temple.aldwairi_projects_emotionecho.ui.screens
 
 import android.annotation.SuppressLint
+import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -52,19 +53,20 @@ fun SettingsScreen(
                     showDialog.value = true
                 }
             )
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                Text("Use Custom App Theme")
-                Switch(
-                    checked = checked,
-                    onCheckedChange = {
-                        checked = it
-                        dynamicColor.value = it.not()
-                    }
-                )
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Text("Use Custom App Theme")
+                    Switch(
+                        checked = checked,
+                        onCheckedChange = {
+                            checked = it
+                            dynamicColor.value = it.not()
+                        }
+                    )
+                }
             }
         }
 
