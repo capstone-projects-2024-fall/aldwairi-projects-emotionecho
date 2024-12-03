@@ -23,15 +23,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.temple.aldwairi_projects_emotionecho.DataBaseEE
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomButton
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.App
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.EmotionEchoAppRouter
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen.LoginScreen
 import com.temple.aldwairi_projects_emotionecho.ui.theme.AldwairiprojectsemotionechoTheme
+import com.temple.aldwairi_projects_emotionecho.userViewModelEE
 
 @Composable
 fun SettingsScreen(
     modifier: Modifier,
+    dataBaseEE: DataBaseEE,
+    userViewModelEE: userViewModelEE,
     dynamicColor: MutableState<Boolean>
 ) {
     val showDialog = remember { mutableStateOf(false) }
@@ -85,6 +89,7 @@ fun SettingsScreen(
                     CustomButton(
                         text = "Yes",
                         onClick = {
+                            dataBaseEE.signOut()
                             EmotionEchoAppRouter.navigateTo(LoginScreen)
                             EmotionEchoAppRouter.changeApp(App.Login)
                         }
@@ -102,13 +107,14 @@ fun SettingsScreen(
         }
     }
 }
-@SuppressLint("UnrememberedMutableState")
-@Preview(showBackground = true)
-@Composable
-fun PreviewPrivacySettingScreen() {
-    val dc = mutableStateOf(false)
-    AldwairiprojectsemotionechoTheme(darkTheme = false) {
-        SettingsScreen(Modifier, dc)
-    }
-}
+
+//@SuppressLint("UnrememberedMutableState")
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewPrivacySettingScreen() {
+//    val dc = mutableStateOf(false)
+//    AldwairiprojectsemotionechoTheme(darkTheme = false) {
+//        SettingsScreen(Modifier, dc)
+//    }
+//}
 

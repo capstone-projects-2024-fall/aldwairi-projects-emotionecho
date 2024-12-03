@@ -19,19 +19,25 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.temple.aldwairi_projects_emotionecho.DataBaseEE
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomButton
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomClickableText
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomDividerWithText
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomTextInput
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen.LoginScreen
 import com.temple.aldwairi_projects_emotionecho.ui.theme.AldwairiprojectsemotionechoTheme
+import com.temple.aldwairi_projects_emotionecho.userViewModelEE
 
 @Composable
 fun SignupScreen(
-    context: Context
+    context: Context,
+    dataBaseEE: DataBaseEE,
+    userViewModelEE: userViewModelEE
 ){
     val usernameInput = rememberSaveable { mutableStateOf("") }
     val passwordInput = rememberSaveable { mutableStateOf("") }
+    val firstNameInput = rememberSaveable { mutableStateOf("") }
+    val lastNameInput = rememberSaveable { mutableStateOf("") }
 
     Surface(
         modifier = Modifier.fillMaxSize()
@@ -43,13 +49,13 @@ fun SignupScreen(
         ) {
             CustomTextInput(
                 label = "First Name",
-                textInput = usernameInput,
+                textInput = firstNameInput,
                 imageVector = Icons.Filled.Person,
                 testTag = "USERNAME_TEST",
             )
             CustomTextInput(
                 label = "Last Name",
-                textInput = usernameInput,
+                textInput = lastNameInput,
                 imageVector = Icons.Filled.Person,
                 testTag = "USERNAME_TEST",
             )
@@ -68,7 +74,14 @@ fun SignupScreen(
             )
             CustomButton(
                 text = "Sign Up!"
-            ) { TODO() }
+            ) { dataBaseEE.createUser(
+                firstName = firstNameInput.value,
+                lastName = lastNameInput.value,
+                email = usernameInput.value,
+                password = passwordInput.value,
+                {},
+                {}
+            ) }
             CustomDividerWithText()
             CustomClickableText(
                 screen = LoginScreen,
