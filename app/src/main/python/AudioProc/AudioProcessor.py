@@ -13,15 +13,15 @@ class AudioProcessor:
 
     def split(self, chunk):
         pcmData = np.frombuffer(chunk, dtype=np.int16)
-
         # Add each sample in pcmData to the buffer
         for sample in pcmData:
             self.buffer.append(sample)
 
             # When the buffer is full, save it and clear for the next chunk
             if len(self.buffer) == self.manager.bufferSize:
-                self.manager.fileManager.saveWav(np.array(self.buffer, dtype=np.int16))
+                filename = self.manager.fileManager.saveWav(np.array(self.buffer, dtype=np.int16))
                 self.buffer.clear()
+                return filename
 
     def processChunk(self, chunk):
         # Convert the incoming chunk to PCM data
