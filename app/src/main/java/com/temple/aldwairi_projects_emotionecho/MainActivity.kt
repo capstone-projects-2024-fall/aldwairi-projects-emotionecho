@@ -28,7 +28,8 @@ class MainActivity : ComponentActivity() {
         if (!Python.isStarted()) {
             Python.start(AndroidPlatform(this))
         }
-
+        val dataBaseEE = DataBaseEE()
+        val userViewModelEE = userViewModelEE()
         // Set up the Composables
         setContent {
             AldwairiprojectsemotionechoTheme {
@@ -38,10 +39,10 @@ class MainActivity : ComponentActivity() {
                     when (currentApp.value) {
                         App.Main -> {
                             // Pass `this` (MainActivity) as context so that the Composable can use it for permissions
-                            EmotionEchoApp(this)
+                            EmotionEchoApp(this,dataBaseEE,userViewModelEE)
                         }
 
-                        App.Login -> EmotionEchoLoginApp(this)
+                        App.Login -> EmotionEchoLoginApp(this,dataBaseEE,userViewModelEE)
                     }
                 }
             }

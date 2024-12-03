@@ -1,6 +1,8 @@
 package com.temple.aldwairi_projects_emotionecho.ui.screens
 
 import android.content.Context
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,21 +17,26 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.temple.aldwairi_projects_emotionecho.DataBaseEE
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomButton
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomClickableText
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomDividerWithText
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomTextInput
+import com.temple.aldwairi_projects_emotionecho.ui.navigation.App
+import com.temple.aldwairi_projects_emotionecho.ui.navigation.EmotionEchoAppRouter
+import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen.RealTimeModeScreen
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen.SingupScreen
-import com.temple.aldwairi_projects_emotionecho.ui.theme.AldwairiprojectsemotionechoTheme
+import com.temple.aldwairi_projects_emotionecho.userViewModelEE
 
 @Composable
 fun LogInScreen(
-    context: Context
+    context: Context,
+    database : DataBaseEE,
+    userViewModelEE : userViewModelEE
 ){
     val usernameInput = rememberSaveable { mutableStateOf("") }
     val passwordInput = rememberSaveable { mutableStateOf("") }
@@ -57,7 +64,32 @@ fun LogInScreen(
             )
             CustomButton(
                 text = "Login",
-            ) { TODO() }
+            ) { database.signIn(usernameInput.value ,passwordInput.value,{database.getUserByID(
+                it.uid,
+                { _, user ->
+                    userViewModelEE.setCurrentUser(user!!)
+
+                },
+                {
+                    Log.d("Login", "Error Getting User")
+                }
+            )
+
+                EmotionEchoAppRouter.changeApp(App.Main)
+                EmotionEchoAppRouter.navigateTo(Screen.PracticeModeScreen)},{Log.d("Login", it.toString())
+                if(it is FirebaseAuthInvalidCredentialsException){
+                    Toast.makeText(
+                        context,
+                        "Email or password is incorrect",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else{
+                    Toast.makeText(
+                        context,
+                        "There was an error signing in try again soon.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }}) }
             DividerDefaults.apply {
                 color.blue
                 Thickness.div(1.dp)
@@ -82,10 +114,10 @@ fun LogInScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewLogInScreen(){
-    AldwairiprojectsemotionechoTheme(darkTheme = false) {
-        LogInScreen(LocalContext.current)
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewLogInScreen(){
+//    AldwairiprojectsemotionechoTheme(darkTheme = false) {
+//        LogInScreen(LocalContext.current)
+//    }
+//}

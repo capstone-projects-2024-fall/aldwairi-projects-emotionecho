@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.rememberNavController
+import com.temple.aldwairi_projects_emotionecho.DataBaseEE
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomNavBar
 import com.temple.aldwairi_projects_emotionecho.ui.components.TutorialNavBarItemBox
 import com.temple.aldwairi_projects_emotionecho.ui.navigation.Screen.PracticeModeScreen
@@ -36,9 +37,10 @@ import com.temple.aldwairi_projects_emotionecho.R.string.tutorial_step_Introduct
 import com.temple.aldwairi_projects_emotionecho.R.string.tutorial_step_PracticeMode_description
 import com.temple.aldwairi_projects_emotionecho.R.string.tutorial_step_RealTimeMode_description
 import com.temple.aldwairi_projects_emotionecho.R.string.tutorial_step_SettingsScreen_description
+import com.temple.aldwairi_projects_emotionecho.userViewModelEE
 
 @Composable
-fun EmotionEchoApp(context: Context){
+fun EmotionEchoApp(context: Context, dataBaseEE: DataBaseEE, userViewModelEE: userViewModelEE){
     var isTutorialActive by rememberSaveable { mutableStateOf(true) }
     var tutorialStep by rememberSaveable { mutableIntStateOf(0) }
     val navBarItemLocationOnScreen = remember {mutableStateOf<Map<String, LayoutCoordinates>>(emptyMap())}
@@ -58,6 +60,8 @@ fun EmotionEchoApp(context: Context){
                     modifier = Modifier.padding(innerPadding),
                     navController = navController,
                     context = context,
+                    database = dataBaseEE,
+                    userViewModelEE = userViewModelEE,
                     dynamicColor
                 )
             }
@@ -130,8 +134,8 @@ fun TutorialOverlay(navBarItemLocation: Map<String, LayoutCoordinates>, tutorial
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewEmotionEchoApp(){
-    EmotionEchoApp(LocalContext.current)
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewEmotionEchoApp(){
+//    EmotionEchoApp(LocalContext.current)
+//}
