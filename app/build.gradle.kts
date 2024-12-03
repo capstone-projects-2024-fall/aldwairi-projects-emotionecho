@@ -67,6 +67,8 @@ chaquopy {
     defaultConfig {
         pip {
             install("numpy")
+            install("pandas")
+            install("playsound")
         }
     }
     productFlavors {

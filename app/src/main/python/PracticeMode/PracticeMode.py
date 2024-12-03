@@ -27,7 +27,8 @@ class PracticeMode:
 
     # Pulls random audio clip from database
     def get_audio(self):
-        return random.choice(self.audio_clips)
+        randomaudio = random.choice(self.audio_clips)
+        return randomaudio
     # play clip in UI
     def play_audio(self, audio_path):
         # filler
@@ -56,7 +57,7 @@ class PracticeMode:
 # practice_mode.run_example()
 
 # Example usage
-if __name__ == "__main__":
-    dataset_path = "app/src/main/python/PracticeMode/practicemode_dataset"  # Update with actual dataset path
-    practice_mode = PracticeMode(dataset_path)
-    practice_mode.run_example()
+# if __name__ == "__main__":
+#     dataset_path = "app/src/main/python/PracticeMode/practicemode_dataset"  # Update with actual dataset path
+#     practice_mode = PracticeMode(dataset_path)
+#     practice_mode.run_example()

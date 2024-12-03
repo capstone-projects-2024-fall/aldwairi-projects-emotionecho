@@ -2,6 +2,8 @@ package com.temple.aldwairi_projects_emotionecho.ui.screens
 
 import android.content.Context
 import android.widget.Toast
+import android.util.Log
+import android.media.MediaPlayer
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -25,6 +27,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.chaquo.python.Python
+import com.chaquo.python.android.AndroidPlatform
+import com.chaquo.python.PyObject
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomButton
 import com.temple.aldwairi_projects_emotionecho.ui.theme.AldwairiprojectsemotionechoTheme
 
@@ -36,8 +41,23 @@ fun PracticeModeScreen(
 ){
     var isExpanded by rememberSaveable { mutableStateOf(false) }
     var option by rememberSaveable { mutableStateOf("") }
+    var feedback by rememberSaveable { mutableStateOf("") }
 
-    var emotions = listOf("Happy", "Sad", "Angry", "Disgusted", "Fearful")
+    val emotions = listOf("Happy", "Sad", "Angry", "Disgusted", "Fearful")
+
+     // Initialize Python
+    if (!Python.isStarted()) {
+        Python.start(AndroidPlatform(context))
+    }
+    val py = Python.getInstance()
+    val practiceMode = py.getModule("PracticeMode/PracticeMode")
+
+     // Fetch a random audio clip from Python
+    val clip: PyObject =  practiceMode.callAttr("get_audio")
+    val clipID = clip["clip_id"].toString()
+    val audioPath = clip["audio_path"].toString()  // Access keys and convert to String
+    val correctEmotion = clip["emotion_label"].toString()
+
 
     Surface(
         modifier = modifier
@@ -78,8 +98,22 @@ fun PracticeModeScreen(
             CustomButton(
                 "SUBMIT RESPONSE"
             ) {
-                Toast.makeText(context, "You chose $option", Toast.LENGTH_LONG).show()
+                val result = practiceMode.callAttr("provide_feedback", correctEmotion, option).toString()
+                feedback = result
+                Toast.makeText(context, feedback, Toast.LENGTH_LONG).show()
             }
+            Spacer(modifier=Modifier.height(30.dp))
+            CustomButton(
+                "PLAY"
+            ) {
+                Toast.makeText(context, "Playing Audio...", Toast.LENGTH_LONG).show()
+                practiceMode.callAttr("play_audio", audioPath)
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Text(feedback)
+
         }
     }
 }
