@@ -6,11 +6,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.temple.aldwairi_projects_emotionecho.DataBaseEE
 import com.temple.aldwairi_projects_emotionecho.ui.screens.LogInScreen
 import com.temple.aldwairi_projects_emotionecho.ui.screens.SignupScreen
+import com.temple.aldwairi_projects_emotionecho.userViewModelEE
 
 @Composable
-fun EmotionEchoLoginApp(context: Context){
+fun EmotionEchoLoginApp(context: Context, dataBaseEE: DataBaseEE, userViewModelEE: userViewModelEE){
     Surface (
         modifier = Modifier.fillMaxWidth()
     ){
@@ -19,7 +21,7 @@ fun EmotionEchoLoginApp(context: Context){
             label = ""
         ) { currentState ->
             when(currentState.value){
-                is Screen.LoginScreen -> LogInScreen(context)
+                is Screen.LoginScreen -> LogInScreen(context, dataBaseEE, userViewModelEE)
                 is Screen.SingupScreen -> SignupScreen(context)
                 else -> {}
             }

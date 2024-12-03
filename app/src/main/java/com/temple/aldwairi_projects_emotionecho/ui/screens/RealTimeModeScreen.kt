@@ -220,7 +220,7 @@ fun RealTimeModeScreen(
 
             CustomButton(
                 if (isRecording) "Stop Recording" else "Start Recording and Analyzing",
-                listOf(Color.Black, Color.Gray)
+
             ) {
                 Toast.makeText(context, "Analyzing started using $option mic", Toast.LENGTH_LONG).show()
                 toggleRecording()

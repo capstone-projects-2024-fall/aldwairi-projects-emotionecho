@@ -8,11 +8,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import com.temple.aldwairi_projects_emotionecho.DataBaseEE
 import com.temple.aldwairi_projects_emotionecho.ui.screens.LogInScreen
 import com.temple.aldwairi_projects_emotionecho.ui.screens.PracticeModeScreen
 import com.temple.aldwairi_projects_emotionecho.ui.screens.SettingsScreen
 import com.temple.aldwairi_projects_emotionecho.ui.screens.RealTimeModeScreen
 import com.temple.aldwairi_projects_emotionecho.ui.screens.SignupScreen
+import com.temple.aldwairi_projects_emotionecho.userViewModelEE
 
 /**
  * Custom function for creating a NavHost
@@ -28,6 +30,8 @@ fun NavigationGraph(
     modifier: Modifier,
     navController: NavHostController,
     context: Context,
+    database: DataBaseEE,
+    userViewModelEE: userViewModelEE,
     dynamicColor: MutableState<Boolean>
 ){
     NavHost(
@@ -36,7 +40,11 @@ fun NavigationGraph(
     ){
 //        TODO: uncomment once all screens are fully implemented
         composable(Screen.LoginScreen.screenRoute) {
-            LogInScreen(LocalContext.current)
+            LogInScreen(
+                LocalContext.current,
+                database = database,
+                userViewModelEE = userViewModelEE
+            )
         }
         composable(Screen.SingupScreen.screenRoute) {
             SignupScreen(LocalContext.current)

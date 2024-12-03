@@ -1,10 +1,11 @@
 [versions]
 accompanistSwiperefresh = "0.27.0"
 activityComposeVersion = "1.9.2"
-agp = "8.3.2"
+agp = "8.7.2"
 composeBomVersion = "2024.09.03"
 converterGson = "2.9.0"
 coreKtxVersion = "1.13.1"
+ffmpegKitFullVersion = "4.5"
 firebaseAuth = "23.0.0"
 firebaseBom = "33.4.0"
 firebaseFirestore = "25.1.0"
@@ -19,6 +20,7 @@ activityCompose = "1.9.2"
 composeBom = "2024.09.03"
 lifecycleRuntimeKtxVersion = "2.8.6"
 materialIconsExtended = "1.7.3"
+multidex = "2.0.1"
 playServicesLocation = "21.3.0"
 retrofit = "2.9.0"
 roomRuntime = "2.6.1"
@@ -35,8 +37,10 @@ androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-ru
 androidx-lifecycle-runtime-ktx-v286 = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtxVersion" }
 androidx-material = { module = "androidx.compose.material:material", version.ref = "materialIconsExtended" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
+androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
+arthenica-ffmpeg-kit-full = { module = "com.arthenica:ffmpeg-kit-full", version.ref = "ffmpegKitFullVersion" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-auth = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuth" }
