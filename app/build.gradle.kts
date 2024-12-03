@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("com.google.gms.google-services")
-    id("com.chaquo.python")
+    id("com.chaquo.python") version "16.0.0"
 }
 
 android {
@@ -15,7 +15,7 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
+        multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -58,7 +58,7 @@ android {
 
     flavorDimensions += "pyVersion"
     productFlavors {
-        create("py38") { dimension = "pyVersion" }
+        create("py308"){ dimension = "pyVersion" }
     }
 }
 
@@ -66,13 +66,15 @@ android {
 chaquopy {
     defaultConfig {
         pip {
+            install("scipy")
+            install("torch")
             install("numpy")
             install("pandas")
             install("playsound")
         }
     }
     productFlavors {
-        getByName("py38") { version = "3.8" }
+        getByName("py308") { version = "3.8" }
     }
     sourceSets { }
 }
@@ -81,7 +83,10 @@ dependencies {//Android
     implementation(libs.androidx.core.ktx.v1131)
     implementation(libs.androidx.lifecycle.runtime.ktx.v286)
 
+
     /** Compose **/
+    implementation(libs.arthenica.ffmpeg.kit.full)
+    implementation (libs.androidx.multidex)
     implementation(platform(libs.androidx.compose.bom.v20240903))
     implementation(libs.androidx.activity.compose.v192)
     //noinspection UseTomlInstead

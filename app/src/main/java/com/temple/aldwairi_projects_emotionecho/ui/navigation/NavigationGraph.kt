@@ -2,15 +2,19 @@ package com.temple.aldwairi_projects_emotionecho.ui.navigation
 
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import com.temple.aldwairi_projects_emotionecho.DataBaseEE
 import com.temple.aldwairi_projects_emotionecho.ui.screens.LogInScreen
 import com.temple.aldwairi_projects_emotionecho.ui.screens.PracticeModeScreen
+import com.temple.aldwairi_projects_emotionecho.ui.screens.SettingsScreen
 import com.temple.aldwairi_projects_emotionecho.ui.screens.RealTimeModeScreen
 import com.temple.aldwairi_projects_emotionecho.ui.screens.SignupScreen
+import com.temple.aldwairi_projects_emotionecho.userViewModelEE
 
 /**
  * Custom function for creating a NavHost
@@ -26,7 +30,9 @@ fun NavigationGraph(
     modifier: Modifier,
     navController: NavHostController,
     context: Context,
-    dynamicColor: Boolean
+    database: DataBaseEE,
+    userViewModelEE: userViewModelEE,
+    dynamicColor: MutableState<Boolean>
 ){
     NavHost(
         navController = navController,
@@ -34,14 +40,18 @@ fun NavigationGraph(
     ){
 //        TODO: uncomment once all screens are fully implemented
         composable(Screen.LoginScreen.screenRoute) {
-            LogInScreen(LocalContext.current)
+            LogInScreen(
+                LocalContext.current,
+                database = database,
+                userViewModelEE = userViewModelEE
+            )
         }
         composable(Screen.SingupScreen.screenRoute) {
             SignupScreen(LocalContext.current)
         }
-//        composable(Screen.SettingsScreen.screenRoute) {
-//            SettingsScreen(modifier, dynamicColor)
-//        }
+        composable(Screen.SettingsScreen.screenRoute) {
+            SettingsScreen(modifier, dynamicColor)
+        }
 //        composable(Screen.HomeScreen.screenRoute) {
 //            HomeScreen(modifier)
 //        }

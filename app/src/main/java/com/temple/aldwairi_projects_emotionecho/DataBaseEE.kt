@@ -1,11 +1,17 @@
 package com.temple.aldwairi_projects_emotionecho
 
 import android.util.Log
+import com.google.android.gms.tasks.Task
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.QueryDocumentSnapshot
+import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.toObject
 import com.google.firebase.storage.storage
+
 
 class DataBaseEE {
 
@@ -62,6 +68,113 @@ class DataBaseEE {
     }
     fun signOut(){
         FirebaseAuth.signOut()
+    }
+    fun updateUser(
+        user: User,
+        onSuccess: () -> Unit,
+        onFailure: () -> Unit
+    ){
+        val newUserData = hashMapOf(
+            User.USERID to user.userID,
+            User.FIRST_NAME to user.firstName,
+            User.LAST_NAME to user.lastName,
+            User.EMAIL_ADDRESS to user.email
+        )
+        getUserByID(
+            user.userID!!,
+            { userDocument, _ ->
+                database.collection(User.USER_TABLE)
+                    .document(userDocument!!.id)
+                    .set(newUserData, SetOptions.merge())
+                onSuccess()
+            },
+            onFailure
+        )
+    }
+
+    /**
+     * Retrieves all user records from the database.
+     * @param onSuccess A lambda expression that receives the QuerySnapshot result.
+     * @param onFailure A lambda expression called upon failure to get the table.
+     * @return void
+     */
+    fun getUserTable(
+        onSuccess: (QuerySnapshot?) -> Unit,
+        onFailure: () -> Unit
+    ) {
+        database.collection(User.USER_TABLE)
+            .get()
+            .addOnSuccessListener { result ->
+                onSuccess(result)
+            }
+            .addOnFailureListener { exception ->
+                Log.w(TAG_FIRESTORE, "Error getting data.", exception)
+                onFailure()
+            }
+    }
+
+    /**
+     * Retrieves a user record from the database by user ID.
+     * @param userID The ID of the user to retrieve.
+     * @param onSuccess A lambda expression called with the QueryDocumentSnapshot upon success.
+     * @param onFailure A lambda expression called upon failure to retrieve the user.
+     * @return void
+     */
+    fun getUserByID(
+        userID: String,
+        onSuccess: (QueryDocumentSnapshot?, User?) -> Unit,
+        onFailure: () -> Unit
+    ) {
+        getUserTable(
+            { users: QuerySnapshot? ->  // Explicitly specify the type of `users`
+                if (users != null) {
+                    for (document in users) {
+                        if (document.data[User.USERID] == userID) {
+                            onSuccess(document, document.toObject<User>())
+                            return@getUserTable
+                        }
+                    }
+                }
+                onFailure() // Call onFailure if no match is found
+            },
+            {
+                onFailure() // Handle the failure case
+            }
+        )
+    }
+
+    /**
+     * @param user The ID of the user to delete.
+     * @param onSuccess A lambda expression called with the Task on success.
+     * @param onFailure A lambda expression called upon failure to delete the user.
+     * @return void
+     */
+    fun removeUser(
+        userID: String,
+        onSuccess: (Task<Void>) -> Unit,
+        onFailure: (Exception) -> Unit
+    ){
+        getUserByID(
+            userID,
+            { document, _ ->
+                database.collection(User.USER_TABLE)
+                    .document(document!!.id)
+                    .delete()
+                    .addOnCompleteListener(onSuccess)
+                    .addOnFailureListener(onFailure)
+            },
+            {
+                //Need to handle this later but should not be a problem
+            }
+        )
+    }
+
+    /**
+     * Gets the currently signed in user
+     * @return The firebase user or null
+     */
+    fun getCurrentUser(): FirebaseUser?{
+        return FirebaseAuth.currentUser
     }
 
 

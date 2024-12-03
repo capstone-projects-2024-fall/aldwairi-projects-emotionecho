@@ -5,6 +5,7 @@ import androidx.compose.material.icons.filled.Hearing
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Psychology
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -15,6 +16,7 @@ sealed class Screen(var title: String, var icon: ImageVector, var screenRoute: S
     object HomeScreen: Screen("Home", Default.Home, "home", true, {})
     object PracticeModeScreen: Screen("Practice Mode", Default.Psychology, "practice", true, {})
     object RealTimeModeScreen: Screen("Real Time Mode", Default.Hearing, "real_time", true, {})
+    object SettingsScreen: Screen("Settings", Default.Settings, "settings", true, {})
 }
 
 sealed class App{
