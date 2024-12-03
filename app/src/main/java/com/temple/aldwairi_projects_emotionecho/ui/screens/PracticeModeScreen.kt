@@ -23,8 +23,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.temple.aldwairi_projects_emotionecho.R
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomButton
 import com.temple.aldwairi_projects_emotionecho.ui.theme.AldwairiprojectsemotionechoTheme
 
@@ -76,7 +78,7 @@ fun PracticeModeScreen(
             }
             Spacer(modifier=Modifier.height(50.dp))
             CustomButton(
-                "SUBMIT RESPONSE"
+                stringResource(R.string.submit_response)
             ) {
                 Toast.makeText(context, "You chose $option", Toast.LENGTH_LONG).show()
             }

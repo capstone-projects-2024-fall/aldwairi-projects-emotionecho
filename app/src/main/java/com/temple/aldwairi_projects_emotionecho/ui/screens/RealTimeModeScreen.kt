@@ -26,10 +26,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.chaquo.python.Python
 import com.google.gson.Gson
+import com.temple.aldwairi_projects_emotionecho.MainActivity
+import com.temple.aldwairi_projects_emotionecho.R
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomButton
 import com.temple.aldwairi_projects_emotionecho.ui.components.PieChartWithLegend
 import android.media.AudioFormat
@@ -38,8 +41,10 @@ import android.media.MediaRecorder
 import androidx.core.content.ContextCompat
 import android.Manifest
 import android.util.Log
+import androidx.compose.ui.res.stringResource
 import com.chaquo.python.PyObject
 import com.temple.aldwairi_projects_emotionecho.MainActivity
+import com.temple.aldwairi_projects_emotionecho.R
 import com.temple.aldwairi_projects_emotionecho.ui.components.AnimatedEmotionField
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -219,8 +224,7 @@ fun RealTimeModeScreen(
             Spacer(modifier = Modifier.height(50.dp))
 
             CustomButton(
-                if (isRecording) "Stop Recording" else "Start Recording and Analyzing",
-                listOf(Color.Black, Color.Gray)
+                if (isRecording) stringResource(R.string.stop_recording) else stringResource(R.string.start_recording_and_analyzing)
             ) {
                 Toast.makeText(context, "Analyzing started using $option mic", Toast.LENGTH_LONG).show()
                 toggleRecording()
@@ -245,5 +249,3 @@ fun PreviewRealTimeModeScreen() {
     val mockContext = LocalContext.current
     RealTimeModeScreen(mockContext, Modifier.padding(20.dp))
 }
-
-

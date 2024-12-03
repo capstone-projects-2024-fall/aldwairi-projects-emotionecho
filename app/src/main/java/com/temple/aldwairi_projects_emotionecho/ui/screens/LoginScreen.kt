@@ -16,9 +16,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.temple.aldwairi_projects_emotionecho.R
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomButton
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomClickableText
 import com.temple.aldwairi_projects_emotionecho.ui.components.CustomDividerWithText
@@ -56,7 +58,7 @@ fun LogInScreen(
                 testTag = "USERNAME_TEST",
             )
             CustomButton(
-                text = "Login",
+                text = stringResource(R.string.login),
             ) { TODO() }
             DividerDefaults.apply {
                 color.blue
@@ -66,7 +68,7 @@ fun LogInScreen(
             CustomClickableText(
                 screen = SingupScreen,
                 startString = "Don't have an account? ",
-                aString = "Signup here!",
+                aString = stringResource(R.string.sign_up_here),
                 aStringTag = "NAV",
                 aStringAnnotation = "takes you to our signup page"
             )
@@ -74,9 +76,9 @@ fun LogInScreen(
             CustomClickableText(
                 screen = RealTimeModeScreen,
                 startString = "Enter as a ",
-                aString = "Guest",
+                aString = stringResource(R.string.guest),
                 aStringTag = "NAV",
-                aStringAnnotation = "takes you to our signup page"
+                aStringAnnotation = "lets a guest enter the app"
             )
         }
     }
