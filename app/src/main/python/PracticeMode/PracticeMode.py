@@ -9,12 +9,11 @@ class PracticeMode:
         self.audio_clips = self.get_metadata(data_path)
 
     def get_metadata(self, data_path):
-        file = os.path.join(data_path, "metadata.csv")
-        if not os.path.exists(file):
-            raise FileNotFoundError(f"Metadata file not found at {file}")
+        if not os.path.exists(data_path):
+            raise FileNotFoundError(f"Metadata file not found at {data_path}")
 
         # Load metadata using pandas
-        metadata = pd.read_csv(file)
+        metadata = pd.read_csv(data_path)
         return [
             {
                 "clip_id": row["FileName"],
@@ -61,3 +60,5 @@ class PracticeMode:
 #     dataset_path = "app/src/main/python/PracticeMode/practicemode_dataset"  # Update with actual dataset path
 #     practice_mode = PracticeMode(dataset_path)
 #     practice_mode.run_example()
+
+prac = PracticeMode("/data/data/com.temple.aldwairi_projects_emotionecho/files/chaquopy/AssetFinder/app/PracticeMode/practicemode_dataset/metadata.csv")
