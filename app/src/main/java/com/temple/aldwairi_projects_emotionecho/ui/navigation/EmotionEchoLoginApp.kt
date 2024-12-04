@@ -22,7 +22,7 @@ fun EmotionEchoLoginApp(context: Context, dataBaseEE: DataBaseEE, userViewModelE
         ) { currentState ->
             when(currentState.value){
                 is Screen.LoginScreen -> LogInScreen(context, dataBaseEE, userViewModelEE)
-                is Screen.SingupScreen -> SignupScreen(context)
+                is Screen.SingupScreen -> SignupScreen(context, dataBaseEE, userViewModelEE)
                 else -> {}
             }
         }
