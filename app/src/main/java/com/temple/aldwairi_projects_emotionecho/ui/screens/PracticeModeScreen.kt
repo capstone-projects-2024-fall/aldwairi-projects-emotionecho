@@ -109,9 +109,11 @@ fun PracticeModeScreen(
                 } else {
                     feedback = "Incorrect. The correct emotion was $correctEmotion."
                 }
+                // automatically picks a new random file if user submits a response
+                selectFile()
                 Toast.makeText(context, feedback, Toast.LENGTH_LONG).show()
             }
-            Spacer(modifier=Modifier.height(30.dp))
+            Spacer(modifier=Modifier.height(20.dp))
 
             // Button for playing randomly chosen audio file
             CustomButton(
