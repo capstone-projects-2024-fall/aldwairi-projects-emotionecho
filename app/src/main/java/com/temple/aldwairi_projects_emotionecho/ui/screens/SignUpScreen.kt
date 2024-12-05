@@ -29,7 +29,9 @@ import com.temple.aldwairi_projects_emotionecho.ui.theme.Aldwairiprojectsemotion
 @Composable
 fun SignupScreen(
     context: Context
-){
+) {
+    val firstNameInput = rememberSaveable { mutableStateOf("") }
+    val lastNameInput = rememberSaveable { mutableStateOf("") }
     val usernameInput = rememberSaveable { mutableStateOf("") }
     val passwordInput = rememberSaveable { mutableStateOf("") }
 
@@ -43,15 +45,15 @@ fun SignupScreen(
         ) {
             CustomTextInput(
                 label = "First Name",
-                textInput = usernameInput,
+                textInput = firstNameInput,
                 imageVector = Icons.Filled.Person,
-                testTag = "USERNAME_TEST",
+                testTag = "FIRST_NAME_TEST",
             )
             CustomTextInput(
                 label = "Last Name",
-                textInput = usernameInput,
+                textInput = lastNameInput,
                 imageVector = Icons.Filled.Person,
-                testTag = "USERNAME_TEST",
+                testTag = "LAST_NAME_TEST",
             )
             CustomTextInput(
                 label = "Username",
@@ -64,11 +66,13 @@ fun SignupScreen(
                 textInput = passwordInput,
                 imageVector = Icons.Filled.Lock,
                 keyboardType = KeyboardType.Password,
-                testTag = "USERNAME_TEST",
+                testTag = "PASSWORD_TEST",
             )
             CustomButton(
                 text = "Sign Up!"
-            ) { TODO() }
+            ) {
+                // Handle sign-up logic here
+            }
             CustomDividerWithText()
             CustomClickableText(
                 screen = LoginScreen,
