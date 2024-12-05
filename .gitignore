@@ -349,6 +349,9 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
+# Ignore the ML code folder
+/modelBuildingCode/
+
 ### AndroidStudio Patch ###
 
 !/gradle/wrapper/gradle-wrapper.jar
