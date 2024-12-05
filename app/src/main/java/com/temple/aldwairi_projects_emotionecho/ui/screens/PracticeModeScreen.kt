@@ -111,7 +111,7 @@ fun PracticeModeScreen(
                 } else {
                     feedback = "Incorrect. The correct emotion was $correctEmotion."
                 }
-                // automatically picks a new random file if user submits a response
+                // Automatically picks a new random file if user submits a response
                 selectFile()
                 Toast.makeText(context, feedback, Toast.LENGTH_LONG).show()
             }
@@ -122,9 +122,12 @@ fun PracticeModeScreen(
                 "PLAY"
             ) {
                 if (currentFile.isNotEmpty()) {
-                    try {
-                        Log.d("PracticeMode", "Attempting to play: $currentFile")
-                        val storageReference = FirebaseStorage.getInstance().reference.child("PracticeMode_WavFiles/$currentFile")
+                    var count = 0
+                    val max = 5
+
+                    fun tryPlay() {
+                        val storageReference =
+                            FirebaseStorage.getInstance().reference.child("PracticeMode_WavFiles/$currentFile")
                         val localFile = File.createTempFile("random_audio", ".wav")
 
                         storageReference.getFile(localFile).addOnSuccessListener {
@@ -138,9 +141,17 @@ fun PracticeModeScreen(
                             }
 
                             mediaPlayer.setOnErrorListener { mp, what, extra ->
-                                Log.e("PracticeMode", "Error occurred while playing audio: what=$what, extra=$extra")
-                                Toast.makeText(context, "Error playing audio", Toast.LENGTH_SHORT).show()
-                                selectFile()
+                                if (count < max) {
+                                    count++
+                                    selectFile()
+                                    tryPlay()
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        "Unable to play any files.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
                                 true
                             }
 
@@ -151,15 +162,18 @@ fun PracticeModeScreen(
                                 Log.d("PracticeMode", "Playback complete")
                             }
                         }.addOnFailureListener { e ->
-                            // Handle error in downloading
                             Log.e("PracticeMode", "Error downloading audio: ${e.message}")
-                            Toast.makeText(context, "Error downloading audio", Toast.LENGTH_SHORT).show()
+                            if (count < max) {
+                                count++
+                                selectFile()
+                                tryPlay()
+                                //Toast.makeText(context, "Error downloading audio", Toast.LENGTH_SHORT).show()
+                            }
                         }
-
-                    } catch (e: Exception) {
-                        Log.e("PracticeMode", "Error playing audio: ${e.message}")
-                        Toast.makeText(context, "Error playing audio", Toast.LENGTH_SHORT).show()
                     }
+
+                    tryPlay()
+
                 } else {
                     Toast.makeText(context, "No file selected", Toast.LENGTH_LONG).show()
                 }
