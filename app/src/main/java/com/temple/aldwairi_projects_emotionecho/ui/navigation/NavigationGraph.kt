@@ -41,22 +41,26 @@ fun NavigationGraph(
 //        TODO: uncomment once all screens are fully implemented
         composable(Screen.LoginScreen.screenRoute) {
             LogInScreen(
-                LocalContext.current,
+                context,
                 database = database,
                 userViewModelEE = userViewModelEE
             )
         }
         composable(Screen.SingupScreen.screenRoute) {
-            SignupScreen(LocalContext.current)
+            SignupScreen(
+                context,
+                database,
+                userViewModelEE
+            )
         }
         composable(Screen.SettingsScreen.screenRoute) {
-            SettingsScreen(modifier, dynamicColor)
+            SettingsScreen(modifier,database,userViewModelEE, dynamicColor)
         }
 //        composable(Screen.HomeScreen.screenRoute) {
 //            HomeScreen(modifier)
 //        }
         composable(Screen.PracticeModeScreen.screenRoute) {
-            PracticeModeScreen(LocalContext.current, modifier)
+            PracticeModeScreen(context, modifier)
         }
         composable(Screen.RealTimeModeScreen.screenRoute) {
             RealTimeModeScreen(context, modifier)
