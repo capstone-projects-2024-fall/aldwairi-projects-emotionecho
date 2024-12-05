@@ -69,6 +69,8 @@ chaquopy {
             install("scipy")
             install("torch")
             install("numpy")
+            install("pandas")
+            install("playsound")
         }
     }
     productFlavors {
@@ -101,6 +103,7 @@ dependencies {//Android
     implementation("androidx.compose.foundation:foundation")
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.play.services.location)
+    implementation(libs.androidx.appcompat)
     androidTestImplementation(platform(libs.androidx.compose.bom.v20240903))
     //noinspection UseTomlInstead
     debugImplementation("androidx.compose.ui:ui-tooling")
