@@ -32,7 +32,9 @@ import com.temple.aldwairi_projects_emotionecho.ui.theme.Aldwairiprojectsemotion
 import android.media.MediaPlayer
 import androidx.compose.runtime.LaunchedEffect
 import com.google.common.reflect.TypeToken
+import com.google.firebase.storage.FirebaseStorage
 import com.google.gson.Gson
+import java.io.File
 import java.io.InputStream
 import kotlin.random.Random
 
@@ -50,7 +52,7 @@ fun PracticeModeScreen(
 
     val emotions = listOf("Happy", "Sad", "Angry", "Neutral", "Fear", "Disgust")
 
-    val jsonFileName = "metadata.json"
+    val jsonFileName = "metadata2.json"
     val metadata = remember { loadMetadata(context, jsonFileName) }
 
     // Selects a random audio file and its corresponding emotion
@@ -121,28 +123,37 @@ fun PracticeModeScreen(
             ) {
                 if (currentFile.isNotEmpty()) {
                     try {
-                        val assetFilePath = "practicemode_dataset/$currentFile"
-                        val assetManager = context.assets
-                        val assetFileDescriptor = assetManager.openFd(assetFilePath)
+                        Log.d("PracticeMode", "Attempting to play: $currentFile")
+                        val storageReference = FirebaseStorage.getInstance().reference.child("PracticeMode_WavFiles/$currentFile")
+                        val localFile = File.createTempFile("random_audio", ".wav")
 
-                        val mediaPlayer = MediaPlayer()
-                        mediaPlayer.setDataSource(assetFileDescriptor.fileDescriptor, assetFileDescriptor.startOffset, assetFileDescriptor.length)
+                        storageReference.getFile(localFile).addOnSuccessListener {
+                            val mediaPlayer = MediaPlayer()
+                            mediaPlayer.setDataSource(localFile.absolutePath)
 
-                        mediaPlayer.setOnPreparedListener {
-                            mediaPlayer.start()
-                            //Log.d("PracticeMode", "Playing: $currentFile")
-                            //Toast.makeText(context, "Playing $currentFile", Toast.LENGTH_LONG).show()
-                        }
-                        mediaPlayer.setOnErrorListener { mp, what, extra ->
-                            Log.e("PracticeMode", "Error occurred while playing audio: what=$what, extra=$extra")
-                            Toast.makeText(context, "Error playing audio", Toast.LENGTH_SHORT).show()
-                            true
-                        }
-                        mediaPlayer.prepareAsync()
+                            mediaPlayer.setOnPreparedListener {
+                                mediaPlayer.start()
+                                Log.d("PracticeMode", "Playing: $currentFile")
+                                //Toast.makeText(context, "Playing $currentFile", Toast.LENGTH_LONG).show()
+                            }
 
-                        mediaPlayer.setOnCompletionListener {
-                            mediaPlayer.release()
-                            Log.d("PracticeMode", "Playback complete")
+                            mediaPlayer.setOnErrorListener { mp, what, extra ->
+                                Log.e("PracticeMode", "Error occurred while playing audio: what=$what, extra=$extra")
+                                Toast.makeText(context, "Error playing audio", Toast.LENGTH_SHORT).show()
+                                selectFile()
+                                true
+                            }
+
+                            mediaPlayer.prepareAsync()
+
+                            mediaPlayer.setOnCompletionListener {
+                                mediaPlayer.release()
+                                Log.d("PracticeMode", "Playback complete")
+                            }
+                        }.addOnFailureListener { e ->
+                            // Handle error in downloading
+                            Log.e("PracticeMode", "Error downloading audio: ${e.message}")
+                            Toast.makeText(context, "Error downloading audio", Toast.LENGTH_SHORT).show()
                         }
 
                     } catch (e: Exception) {
